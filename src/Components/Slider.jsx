@@ -94,21 +94,20 @@ const Slider = () => {
                 className="object-cover opacity-70"
                 alt=""
               />
-              
             </div>
             <div className="absolute top-28 left-5 flex-col">
-                <div>
-                  <text className="font-fontbody font-semibold text-white text-3xl">
-                    Scented Treasures
-                  </text>
-                </div>
-                <button className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
-                  <span className="underline underline-offset-4 hover:no-underline">
-                    Explore Products
-                  </span>
-                  <span className="absolute top-6 inset-0 bg-[#f7bba3] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in"></span>
-                </button>
+              <div>
+                <text className="font-fontbody font-semibold text-white text-3xl">
+                  Scented Treasures
+                </text>
               </div>
+              <button className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
+                <span className="underline underline-offset-4 hover:no-underline">
+                  Explore Products
+                </span>
+                <span className="absolute top-6 inset-0 bg-[#f7bba3] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in"></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
