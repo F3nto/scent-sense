@@ -18,10 +18,11 @@ const BestSeller = () => {
   }, []);
 
   return (
-    <div className="mt-12 flex flex-wrap justify-between items-center">
+    <div className="mt-12">
+    <div className="flex flex-wrap justify-between items-center">
         {bestSellerProd.map((item, index) => (
           <div key={index} className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">
-            <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-300">
+            <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200">
             <img
               src={require(`../../Assets/images/bestSellerProd/${item.img}`)}
               className="object-cover z-10 hover:scale-105 transition-transform duration-500 ease-linear"
@@ -42,6 +43,7 @@ const BestSeller = () => {
             </div>
           </div>
         ))}
+    </div>
     </div>
   );
 };

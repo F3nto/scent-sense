@@ -10,6 +10,7 @@ module.exports = {
       },
       colors : {
         header : "#e6beae",
+        comTxt : "#6C4639",
         secondary100 :  "#cce3de",
         secondary200 : "#a4c3b2",
         secondary300 :"#eaf4f4",

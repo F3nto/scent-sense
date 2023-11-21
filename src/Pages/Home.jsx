@@ -5,6 +5,8 @@ import Slider from "../Components/Slider";
 import DealProd from "../Components/DealProd";
 import PromoSession from "../Components/PromoSession";
 import BntrProd from "../Components/BntrProd";
+import Blogs from "../Components/Blogs/Blogs";
+import Footer from "../Components/Footer";
 
 const Home = () => {
   return (
@@ -15,6 +17,8 @@ const Home = () => {
       <DealProd />
       <PromoSession />
       <BntrProd />
+      <Blogs />
+      <Footer />
     </> 
   );
 };

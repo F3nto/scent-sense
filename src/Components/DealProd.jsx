@@ -40,7 +40,7 @@ const DealProd = () => {
             key={index}
             className="flex flex-col border border-slate-400 rounded-tr-md rounded-tl-md"
           >
-            <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-300">
+            <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200">
               <img
                 src={require(`../Assets/images/dealProd/${item.img}`)}
                 alt=""

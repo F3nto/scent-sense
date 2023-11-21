@@ -2,7 +2,9 @@ import React from 'react'
 
 const TopRated = () => {
   return (
-    <div>TopRated</div>
+    <div className='mt-10 mx-12 h-[100vh]'>
+      TopRated
+    </div>
   )
 }
 
