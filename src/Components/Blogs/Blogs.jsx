@@ -65,7 +65,7 @@ const Blogs = () => {
                   onClick={() => handleReadMore()}
                 >
                   <text className="font-fontbody">Read More...</text>
-                  <span className="h-1 w-22 absolute inset-0 left-4 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in"></span>
+                  <span className="absolute inset-0 left-4 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in"></span>
                 </button>
               </div>
             </div>

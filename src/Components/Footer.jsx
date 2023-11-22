@@ -1,17 +1,22 @@
 import React from "react";
-import { FacebookSharp, Instagram, Twitter } from "@mui/icons-material";
+import {
+  FacebookSharp,
+  Instagram,
+  Twitter,
+  CopyrightTwoTone,
+} from "@mui/icons-material";
 const Footer = () => {
   return (
     <footer className="h-[50vh] border-t-header border shadow-header shadow-inner">
-      <div className="mx-12 flex justify-between">
+      <div className="mx-14 flex justify-between">
         <div className="mt-4">
           <img
-            className="object-cover w-60"
+            className="object-cover w-60 ml-12"
             src={require("../Assets/images/officiallogo.png")}
-            alt=""
+            alt="official logo"
           />
           <div className="mt-4">
-            <text className="font-fontbody text-comTxt font-semibold text-md">
+            <text className="font-fontbody text-comTxt font-semibold text-lg tracking-wide">
               Timeless allure for the discerning spirit
             </text>
           </div>
@@ -27,7 +32,7 @@ const Footer = () => {
             </button>
           </div>
         </div>
-        <div className="mt-5">
+        <div className="mt-5 mr-10">
           <h1 className="font-fontbody text-comTxt font-semibold text-xl">
             Quick Menu
           </h1>
@@ -70,25 +75,44 @@ const Footer = () => {
             Help & Information
           </text>
 
-          <div className="text-center mt-3">
-            <button className="font-fontbody text-comTxt text-md">
-              Contact Us
+          <div className="text-center mt-5">
+            <button className="relative group">
+              <text className="font-fontbody text-comTxt text-md">
+                Contact Us
+              </text>
+              <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
             </button>
           </div>
           <div className="text-center mt-3">
-            <button className="font-fontbody text-comTxt text-md">
-              Delivery
+            <button className="relative group">
+              <text className="font-fontbody text-comTxt text-md">
+                Delivery
+              </text>
+              <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>
             </button>
           </div>
           <div className="text-center mt-3">
-            <button className="font-fontbody text-comTxt text-md">FAQs</button>
+            <button className="relative group">
+              <text className="font-fontbody text-comTxt text-md">FAQs</text>
+              <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>
+            </button>
           </div>
           <div className="text-center mt-3">
-            <button className="font-fontbody text-comTxt text-md">
-              Terms and Conditions
+            <button className="relative group">
+              <text className="font-fontbody text-comTxt text-md">
+                Terms and Conditions
+              </text>
+              <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>
             </button>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center items-center border-t-header border py-2 mt-14 space-x-2">
+        <h2 className="font-fontbody text-comTxt text-lg">Copy right</h2>
+        <CopyrightTwoTone />
+        <text>2024 </text>
+        <text className="font-fontbody text-comTxt">Scent-Sense.</text>
+        <text>All rights reserved</text>
       </div>
     </footer>
   );
