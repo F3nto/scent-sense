@@ -33,13 +33,13 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-5 mr-10">
-          <h1 className="font-fontbody text-comTxt font-semibold text-xl">
+          <h1 className="font-fontbody text-comTxt font-semibold text-xl tracking-wider">
             Quick Menu
           </h1>
 
           <div className="text-center mt-5">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Treasures
               </text>
               <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -47,7 +47,7 @@ const Footer = () => {
           </div>
           <div className="text-center mt-5">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Best Seller
               </text>
               <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -55,7 +55,7 @@ const Footer = () => {
           </div>
           <div className="text-center mt-5">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 New Arrivals
               </text>
               <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -63,7 +63,7 @@ const Footer = () => {
           </div>
           <div className="text-center mt-5">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Top Rated
               </text>
               <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -71,13 +71,13 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-5">
-          <text className="font-fontbody text-comTxt font-semibold text-xl">
+          <text className="font-fontbody text-comTxt font-semibold text-xl tracking-wider">
             Help & Information
           </text>
 
           <div className="text-center mt-5">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Contact Us
               </text>
               <span className="absolute inset-0 top-5 bg-header transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
@@ -85,7 +85,7 @@ const Footer = () => {
           </div>
           <div className="text-center mt-3">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Delivery
               </text>
               <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>
@@ -93,13 +93,13 @@ const Footer = () => {
           </div>
           <div className="text-center mt-3">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">FAQs</text>
+              <text className="font-fontbody text-comTxt text-md tracking-wider">FAQs</text>
               <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>
             </button>
           </div>
           <div className="text-center mt-3">
             <button className="relative group">
-              <text className="font-fontbody text-comTxt text-md">
+              <text className="font-fontbody text-comTxt text-md tracking-wider">
                 Terms and Conditions
               </text>
               <span className="absolute inset-0 top-5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out bg-header"></span>

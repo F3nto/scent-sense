@@ -8,6 +8,9 @@ const Slider = () => {
   ];
 
   const [slideIndex, setSlideIndex] = useState(0);
+
+  const [sliderHeight, setSliderHeight] = useState("610px");
+
   // const leftSlider = () => {
   //   setSlideIndex((idx) => (idx === 0 ? phts.length - 1 : idx - 1));
   // };
@@ -23,19 +26,31 @@ const Slider = () => {
 
     const carousel = setInterval(rightSlider, 20000);
 
-    return () => clearInterval(carousel);
+    const handleResize = () => {
+      //! slider responsive
+      setSliderHeight(window.innerWidth >= 768 ? "610px" : "300px");
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(carousel);
+      window.removeEventListener("resize", handleResize);
+    };
   }, [phts.length]);
 
   return (
-    <div className="mx-12 mt-3 flex">
-      <div className="w-2/3 bg-slate-600 relative overflow-hidden">
+    <div className="mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex">
+      <div className=" bg-slate-600 relative overflow-hidden w-full md:sm:w-2/3">
         <img
           src={phts[slideIndex].img}
-          className="kenburns-animation opacity-75 object-cover "
-          style={{ height: "610px" }}
+          className="kenburns-animation opacity-75 object-cover"
+          style={{ height: sliderHeight }}
           alt=""
         />
-        <div className="dots flex absolute bottom-0 left-96">
+        <div className="dots flex absolute bottom-0 left-1/2 sm:md:left-96">
           {phts.map((_, index) => (
             <span
               key={index}
@@ -48,7 +63,7 @@ const Slider = () => {
         </div>
         <div className="absolute inset-0 top-2/4 left-12 flex-col">
           <div className="animation-custom">
-            <text className="font-fontbody text-white font-semibold text-4xl ">
+            <text className="font-fontbody text-white font-semibold text-4xl">
               Find Your Scent
             </text>
           </div>
@@ -61,7 +76,7 @@ const Slider = () => {
           </button>
         </div>
       </div>
-      <div className="flex-1 ml-4 flex-col">
+      <div className="flex-1 flex-col ml-0 sm:md:ml-4 mt-3 sm:md:mt-0">
         <div className="bg-slate-400 relative overflow-hidden">
           <div className="transform scale-100 hover:scale-125 transition-all ease-in-out duration-700">
             <img

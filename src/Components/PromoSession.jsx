@@ -16,18 +16,42 @@ const PromoSession = () => {
         console.log("error...", err);
       });
   }, []);
+  const getInitialHeight = () => {
+    return window.innerWidth >= 768 ? "100%" : "200px";
+  };
+
+  const updateWindowDimensions = () => {
+    setPromoImgHeight(getInitialHeight());
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      updateWindowDimensions();
+    };
+
+    updateWindowDimensions();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const [promoImgHeight, setPromoImgHeight] = useState(getInitialHeight());
 
   return (
-    <div className="mx-12 mt-12">
+    <div className="mx-2 mt-12 sm:md:mx-12">
       {promodata.map((item) => (
         <>
           <div
             key={item._id}
-            className="relative flex justify-center items-center"
+            className="relative flex justify-center items-center "
           >
             <img
               src={require(`../Assets/images/promosession/${item.img}`)}
               className="w-full object-cover"
+              style={{ height: promoImgHeight }}
               alt=""
             />
             <div className="absolute inset-0 top-1/2 left-28">
