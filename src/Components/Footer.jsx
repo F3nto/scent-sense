@@ -7,15 +7,17 @@ import {
 } from "@mui/icons-material";
 const Footer = () => {
   return (
-    <footer className="h-[50vh] border-t-header border shadow-header shadow-inner">
-      <div className="mx-14 flex justify-between">
+    <footer className=" mt-10 border-t-header border shadow-header shadow-inner">
+      <div className="md:sm:mx-14 flex-none sm:md:flex justify-between">
         <div className="mt-4">
+          <div className="flex sm:md:flex-col justify-center items-center">
           <img
-            className="object-cover w-60 ml-12"
+            className="object-cover w-60 ml-0 sm:md:ml-12"
             src={require("../Assets/images/officiallogo.png")}
             alt="official logo"
           />
-          <div className="mt-4">
+          </div>
+          <div className="mt-4 flex sm:md:flex-none justify-center items-center">
             <text className="font-fontbody text-comTxt font-semibold text-lg tracking-wide">
               Timeless allure for the discerning spirit
             </text>
@@ -32,10 +34,13 @@ const Footer = () => {
             </button>
           </div>
         </div>
-        <div className="mt-5 mr-10">
+        <span className="flex md:sm:hidden w-full h-0.5 bg-header mt-4"></span>
+        <div className="mt-5 mr-0 sm:md:mr-10">
+          <div className="flex justify-center items-center">
           <h1 className="font-fontbody text-comTxt font-semibold text-xl tracking-wider">
             Quick Menu
           </h1>
+          </div>
 
           <div className="text-center mt-5">
             <button className="relative group">
@@ -70,11 +75,13 @@ const Footer = () => {
             </button>
           </div>
         </div>
+        <span className="flex md:sm:hidden w-full h-0.5 bg-header mt-4"></span>
         <div className="mt-5">
+          <div className="flex justify-center items-center">
           <text className="font-fontbody text-comTxt font-semibold text-xl tracking-wider">
             Help & Information
           </text>
-
+          </div>
           <div className="text-center mt-5">
             <button className="relative group">
               <text className="font-fontbody text-comTxt text-md tracking-wider">

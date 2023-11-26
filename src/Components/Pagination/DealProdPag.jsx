@@ -20,7 +20,7 @@ const DealProdPag = ({
         }`}
         onClick={onClick}
       ></div>
-    );
+    );  
   };
 
   return (

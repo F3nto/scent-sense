@@ -27,7 +27,7 @@ const BntrProd = () => {
   };
 
   return (
-    <div className="mx-12 mt-12">
+    <div className="mx-2 md:sm:mx-12 mt-12">
       <div className="flex items-center justify-center space-x-8">
         <button
           onClick={() => handleClickTab("bestSeller")}

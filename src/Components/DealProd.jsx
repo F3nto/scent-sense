@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DealProdPag from "./Pagination/DealProdPag";
+import {FavoriteBorderOutlined, ShoppingCartOutlined, SearchOffRounded} from "@mui/icons-material"
 
 const DealProd = () => {
   const [dealData, setDealData] = useState([]);
@@ -8,7 +9,13 @@ const DealProd = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const getInitialItemPerPage = () => {
-    return window.innerWidth <= 768 ? 2 : 4;
+    if (window.innerWidth <= 640) {
+      return 2;
+    } else if (window.innerWidth <= 934) {
+      return 3;
+    } else {
+      return 4;
+    }
   };
 
   const getInitialProdHeight = () => {
@@ -30,7 +37,7 @@ const DealProd = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [updateWindowDimensions]);
   const [itemPerPage, setItemPerPage] = useState(getInitialItemPerPage());
   const [prodHeight, setProdHeight] = useState(getInitialProdHeight());
   const lastItemIndex = currentPage * itemPerPage; //! 1 * 4 = 4
@@ -89,7 +96,7 @@ const DealProd = () => {
       <DealProdPag
         totalLength={dealData.length}
         itemPerPage={itemPerPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={setCurrentPage}   
         currentPage={currentPage}
       />
     </div>

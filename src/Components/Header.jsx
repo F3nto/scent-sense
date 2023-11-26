@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { ShoppingCart, Person, Favorite, Search } from "@mui/icons-material";
-
+import { ShoppingCart, Person, Favorite, Search, DrawOutlined } from "@mui/icons-material";
+import Drawer from "./Drawer/Drawer";
 const Header = () => {
   const [isClickMenu, setIsClickMenu] = useState(false);
 
   const handleClickMenu = () => {
     setIsClickMenu((prev) => !prev);
-  };
+  };  
+
+  const closeDrawer = () => {
+    setIsClickMenu(false)
+  }
 
   return (
     <>
@@ -16,7 +20,7 @@ const Header = () => {
       <div className="flex justify-between items-center mx-4 md:mx-12 mt-4">
         <div>
           <img
-            className="object-cover w-48 md:w-60"
+            className="object-cover w-48 md:sm:w-60"
             src={require("../Assets/images/officiallogo.png")}
             alt=""
           />
@@ -35,7 +39,7 @@ const Header = () => {
             />
           </button>
         </div>
-        <div className="px-3 hidden md:flex items-center">
+        <div className="px-3 hidden md:sm:flex items-center">
           <button>
             <Favorite style={{ width: "40px", height: "35px" }} />
           </button>
@@ -46,7 +50,7 @@ const Header = () => {
             <Person style={{ width: "40px", height: "40px" }} />
           </button>
         </div>
-        <div className="flex md:hidden sm:hidden ml-20 ">
+        <div className="flex md:ml-32 sm:ml-10 md:sm:hidden">
           <div className="w-12 h-12 rounded-full bg-white hover:bg-header flex justify-center items-center shadow-lg hover:shadow-lg shadow-header">
             <img
               className="w-6 h-6"
@@ -55,7 +59,7 @@ const Header = () => {
             />
           </div>
         </div>
-        <div className="flex md:hidden sm:hidden">
+        <div className="flex md:sm:hidden mr-10">
           <div
             className={`
           ${
@@ -86,6 +90,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {isClickMenu ? <Drawer onClose={() => closeDrawer()}/> : null}
     </>
   );
 };

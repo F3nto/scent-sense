@@ -3,7 +3,7 @@ import { Widgets, KeyboardArrowDownOutlined } from "@mui/icons-material";
 
 const TitleBar = () => {
   return (
-    <div className="bg-[#eaf4f4] w-full h-16 items-center mt-4 hidden md:flex sm:flex">
+    <div className="bg-[#eaf4f4] w-full h-16 items-center mt-4 hidden md:sm:flex">
       <div className="ml-12 bg-slate-300 py-5 px-5">
         <button className="flex items-center">
           <Widgets />

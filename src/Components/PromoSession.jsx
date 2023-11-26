@@ -36,7 +36,7 @@ const PromoSession = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [updateWindowDimensions]);
 
   const [promoImgHeight, setPromoImgHeight] = useState(getInitialHeight());
 
@@ -54,8 +54,8 @@ const PromoSession = () => {
               style={{ height: promoImgHeight }}
               alt=""
             />
-            <div className="absolute inset-0 top-1/2 left-28">
-              <text className="font-fontbody text-3xl ">
+            <div className="absolute inset-0 left-2 md:sm:left-28 top-28 md:sm:top-1/2">
+              <text className="font-fontbody text-lg md:sm:text-3xl text-[#b56d50]">
                 {item.discount}% off Products
               </text>
             </div>
