@@ -14,10 +14,10 @@ const Header = () => {
 
   return (
     <>
-      <div className="flex bg-header p-7">
+      <div className="flex bg-header p-7 ">
         <span className="font-fontbody pl-5">Welcome to Scent sense.</span>
       </div>
-      <div className="flex justify-between items-center mx-4 md:mx-12 mt-4">
+      <div className="flex justify-between items-center mx-4 md:mx-12 mt-4 relative">
         <div>
           <img
             className="object-cover w-48 md:sm:w-60"
@@ -89,8 +89,9 @@ const Header = () => {
             </button>
           </div>
         </div>
+        {isClickMenu ? <Drawer onClose={() => closeDrawer()} /> : null}
       </div>
-      {isClickMenu ? <Drawer onClose={() => closeDrawer()}/> : null}
+      
     </>
   );
 };
