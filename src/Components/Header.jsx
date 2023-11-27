@@ -1,16 +1,30 @@
-import React, { useState } from "react";
-import { ShoppingCart, Person, Favorite, Search, DrawOutlined } from "@mui/icons-material";
+import React, { useState, useEffect } from "react";
+import { ShoppingCart, Person, Favorite } from "@mui/icons-material";
 import Drawer from "./Drawer/Drawer";
 const Header = () => {
   const [isClickMenu, setIsClickMenu] = useState(false);
 
   const handleClickMenu = () => {
     setIsClickMenu((prev) => !prev);
-  };  
+  };
 
   const closeDrawer = () => {
-    setIsClickMenu(false)
-  }
+    setIsClickMenu(false);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsClickMenu(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -73,17 +87,17 @@ const Header = () => {
               className="humbuger-menu flex flex-col items-end p-4 focus:outline-none"
             >
               <div
-                className={`h-1 w-8 my-0.5 rounded-md bg-slate-700 transition-transform duration-500 ease-in-out
+                className={`h-1 w-7 my-0.5 rounded-md bg-slate-700 transition-transform duration-500 ease-in-out
             ${isClickMenu ? "transform rotate-45 translate-y-2" : ""}`}
               ></div>
 
               <div
-                className={`h-1 w-8 my-0.5 rounded-md bg-slate-700 transition-opacity duration-700 ease-in-out
+                className={`h-1 w-7 my-0.5 rounded-md bg-slate-700 transition-opacity duration-700 ease-in-out
             ${isClickMenu ? "opacity-0" : "opacity-100"}`}
               ></div>
 
               <div
-                className={`h-1 w-8 my-0.5 rounded-md bg-slate-700 transition-transform duration-500 ease-in-out
+                className={`h-1 w-7 my-0.5 rounded-md bg-slate-700 transition-transform duration-500 ease-in-out
             ${isClickMenu ? "transform -rotate-45 -translate-y-2" : ""}`}
               ></div>
             </button>
@@ -91,7 +105,6 @@ const Header = () => {
         </div>
         {isClickMenu ? <Drawer onClose={() => closeDrawer()} /> : null}
       </div>
-      
     </>
   );
 };
