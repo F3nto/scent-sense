@@ -64,7 +64,7 @@ const Header = () => {
             <Person style={{ width: "40px", height: "40px" }} />
           </button>
         </div>
-        <div className="flex md:ml-32 sm:ml-10 md:sm:hidden">
+        <div className="flex md:ml-32 sm:ml-20 md:sm:hidden">
           <div className="w-12 h-12 rounded-full bg-white hover:bg-header flex justify-center items-center shadow-lg hover:shadow-lg shadow-header">
             <img
               className="w-6 h-6"
@@ -73,7 +73,7 @@ const Header = () => {
             />
           </div>
         </div>
-        <div className="flex md:sm:hidden mr-10">
+        <div className="flex md:sm:hidden mr-5">
           <div
             className={`
           ${

@@ -17,9 +17,33 @@ const NewArrival = () => {
       });
   }, []);
 
+  const getInitialHeight = () => {
+    return window.innerWidth >= 768 ? "300px" : "230px"
+  }
+
+  const updateWindowDimensions = () => {
+    setNewArriProdHeight(getInitialHeight());
+  }
+
+  const [newArrProdHeight, setNewArriProdHeight] = useState(getInitialHeight());
+
+  useEffect(() => {
+    const handleResize = () => {
+      updateWindowDimensions();
+    }
+    updateWindowDimensions()
+
+    window.addEventListener("resize", handleResize);
+
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  },[updateWindowDimensions])
+
   return (
-    <div className="mt-12 h-[100vh]">
-    <div className="flex flex-wrap justify-around items-center">
+    <div className="mt-12">
+    <div className="flex flex-wrap justify-between items-center">
       {newArriProd.map((item, index) => (
         <div
           key={index}
@@ -29,7 +53,7 @@ const NewArrival = () => {
             <img
               src={require(`../../Assets/images/newArrivalProd/${item.img}`)}
               className="object-cover z-10 hover:scale-105 transition-transform duration-500 ease-linear"
-              style={{ width: "100%", height: "300px" }}
+              style={{ width: "100%", height: newArrProdHeight }}
               alt=""
             />
 
