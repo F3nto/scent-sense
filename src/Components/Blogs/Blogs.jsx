@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BlogPag from "../Pagination/BlogPag";
@@ -42,10 +42,10 @@ const Blogs = () => {
     return window.innerWidth >= 768 ? "400px" : "300px";
   }
 
-  const updateWindowDimension = () => {
+  const updateWindowDimension = useCallback(() => {
     setItemPerPage(getInitialItemPerPage());
     setCustomHeight(getInitialCustomHeight());
-  };
+  },[]);
 
   useEffect(() => {
     const handleResize = () => {

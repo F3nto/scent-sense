@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const NewArrival = () => {
   const [newArriProd, setNewArriProd] = useState([]);
@@ -21,9 +21,9 @@ const NewArrival = () => {
     return window.innerWidth >= 768 ? "300px" : "230px"
   }
 
-  const updateWindowDimensions = () => {
+  const updateWindowDimensions = useCallback(() => {
     setNewArriProdHeight(getInitialHeight());
-  }
+  },[]);
 
   const [newArrProdHeight, setNewArriProdHeight] = useState(getInitialHeight());
 

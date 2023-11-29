@@ -47,7 +47,9 @@ body {
 
   animation: custom-fade 4s infinite;
 
-}
+} 
+
+
 
 @keyframes custom-fade {
   0% {
@@ -62,20 +64,11 @@ body {
 }
 
 
-.drawer-container{
-
-  position : absolute;
-  inset:  0;
-  left : -100%;
-  transition : left 0.3s ease-in-out;
-
+.transition-custom {
+  transform: translateX(-20px);
+  transition: transform 4s;
 }
 
-.drawer-open {
-  left : 0;
-}
-
-.drawer-close {
-  left : -100%;
-
+.transition-custom:hover {
+  transform: translateX(0);
 }
