@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import {Search, FavoriteBorderOutlined, ShoppingCart} from "@mui/icons-material"
+import { useNavigate } from "react-router-dom";
+import {
+  Search,
+  FavoriteBorderOutlined,
+  ShoppingCart,
+} from "@mui/icons-material";
 
 const BestSeller = () => {
   const [bestSellerProd, setBestSellerProd] = useState([]);
@@ -23,7 +28,7 @@ const BestSeller = () => {
 
   const updateWindowDimensions = useCallback(() => {
     setBestProdHeight(getInitialHeight());
-  },[]);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,6 +45,19 @@ const BestSeller = () => {
 
   const [bestProdHeight, setBestProdHeight] = useState(getInitialHeight());
 
+  const navigate = useNavigate();
+  const handleClickView = (item) => {
+    const queryParams = {
+      _id: item._id,
+      name: item.name,
+    };
+
+    const url = `/best-seller-product?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+    navigate(url, { state: { item } });
+  };
+  
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-between items-center">
@@ -50,27 +68,29 @@ const BestSeller = () => {
           >
             <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
               <img
-                src={require(`../../Assets/images/bestSellerProd/${item.img}`)}
+                src={require(`../../Assets/images/bestSellerProd/${item.type[0].img}`)}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                 style={{ width: "100%", height: bestProdHeight }}
                 alt=""
               />
               <div className="w-52 h-52 rounded-full bg-[#ffffff] absolute"></div>
-            
-                <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
-                  <div className="space-y-3">
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                      <Search />
-                    </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                      <FavoriteBorderOutlined />
-                    </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                      <ShoppingCart />
-                    </button>
-                  </div>
+
+              <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
+                <div className="space-y-3">
+                  <button
+                    onClick={() => handleClickView(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    <Search />
+                  </button>
+                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                    <FavoriteBorderOutlined />
+                  </button>
+                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                    <ShoppingCart />
+                  </button>
                 </div>
-           
+              </div>
             </div>
             <div className="mt-2 flex justify-center items-center">
               <div className="h-12 w-52 text-center">
@@ -81,7 +101,7 @@ const BestSeller = () => {
             </div>
             <div className="text-center">
               <text className="font-fontbody text-md text-comTxt">
-                ${item.price}  
+                ${item.type[0].price}
               </text>
             </div>
           </div>

@@ -33,7 +33,6 @@ const Blogs = () => {
     navigate(`/blog-detail`);
   };
 
-  
   const getInitialItemPerPage = () => {
     return window.innerWidth >= 768 ? 3 : 2;
   };
@@ -89,7 +88,7 @@ const Blogs = () => {
             </div>
             <div className="text-gray-500 text-sm">{formatDate(item.date)}</div>
             <div className="w-full">
-              <div className=" w-full h-16 text-center">
+              <div className="w-full h-16 text-center">
                 <text className="font-semibold text-sm sm:md:text-lg text-comTxt font-fontbody">
                   {item.title}
                 </text>

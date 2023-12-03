@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../Pages/Home";
 import BlogDetail from "../Pages/BlogDetail";
 import DealProdDetail from "../Pages/DealProdDetail";
+import BestSellerDetail from "../Pages/BestSellerDetail";
 
 
 const MainNavigator = () => {
@@ -15,6 +16,7 @@ const MainNavigator = () => {
         <Route path="/" Component={Home} />
         <Route path="/blog-detail" Component={BlogDetail}/>
         <Route path="/deal-product" Component={DealProdDetail} />
+        <Route path="/best-seller-product" Component={BestSellerDetail} />
       </Routes>
     </BrowserRouter>
   );

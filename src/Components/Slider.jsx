@@ -64,7 +64,7 @@ const Slider = () => {
         <div className="absolute inset-0 top-2/4 left-12 flex-col">
           <div className="animation-custom">
             <text className="font-fontbody text-white font-semibold text-4xl">
-              Find Your Scent
+              Find Your Scent 
             </text>
           </div>
 
