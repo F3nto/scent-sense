@@ -15,15 +15,15 @@ const BlogPag = ({
   }
 
   const CustomPaginationShape = ({ onClick, active }) => {
-    return (
-      <div
+    return (  
+      <div  
         className={`w-4 h-4 rounded-sm cursor-pointer
             ${active ? "bg-header" : "bg-gray-400"}`}
-        onClick={onClick}
-      ></div>
+        onClick={onClick}   
+      ></div> 
     );
   };
-
+                
   return (
     <div className="flex justify-center items-center space-x-2 mt-4">
       {pageNumbers.map((pageNum) => (

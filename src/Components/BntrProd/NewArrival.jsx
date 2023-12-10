@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useCallback } from "react";
+import {useNavigate} from "react-router-dom";
 import {Search, FavoriteBorderOutlined, ShoppingCart} from "@mui/icons-material"
 const NewArrival = () => {
   const [newArriProd, setNewArriProd] = useState([]);
@@ -40,6 +41,17 @@ const NewArrival = () => {
     };
   }, [updateWindowDimensions]);
 
+  const navigate = useNavigate();
+  const handleClickView = (item) => {
+    const queryParams = {
+      _id : item._id,
+      name : item.name
+    }
+
+    const url = `/newarrival-product?${new URLSearchParams(queryParams).toString()}`;
+    navigate(url, {state : {item}})
+  }
+
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-between items-center">
@@ -50,7 +62,7 @@ const NewArrival = () => {
           >
             <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
               <img
-                src={require(`../../Assets/images/newArrivalProd/${item.img}`)}
+                src={require(`../../Assets/images/newArrivalProd/${item.type[0].img}`)}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                 style={{ width: "100%", height: newArrProdHeight }}
                 alt=""
@@ -60,7 +72,7 @@ const NewArrival = () => {
 
               <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
                 <div className="space-y-3">
-                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                  <button onClick={() => handleClickView(item)} className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
                     <Search />
                   </button>
                   <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
@@ -79,7 +91,7 @@ const NewArrival = () => {
             </div>
             <div className="text-center mt-2">
               <text className="font-fontbody text-md text-gray-700">
-                ${item.price}
+                ${item.type[0].price}
               </text>
             </div>
           </div>

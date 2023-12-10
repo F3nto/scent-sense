@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Slider = () => {
   let phts = [
@@ -41,6 +42,16 @@ const Slider = () => {
     };
   }, [phts.length]);
 
+  const navigate = useNavigate()
+  const handleAllProd = () => {
+    navigate("/all-products")
+
+  }
+
+  const handleTreasureProd = () => {
+    navigate("/treasure-products")
+  }
+
   return (
     <div className="mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex">
       <div className=" bg-slate-600 relative overflow-hidden w-full md:sm:w-2/3">
@@ -79,10 +90,10 @@ const Slider = () => {
       <div className="flex-1 flex-col ml-0 sm:md:ml-4 mt-3 sm:md:mt-0">
         <div className="bg-slate-400 relative overflow-hidden">
           <div className="transform scale-100 hover:scale-125 transition-all ease-in-out duration-700">
-            <img
-              src={require("../Assets/images/pick-1-1.jpg")}
-              className="object-cover opacity-70"
-              style={{ width: "100%", height: "300px" }}
+            <img      
+              src={require("../Assets/images/pick-1-1.jpg")}  
+              className="object-cover opacity-70" 
+              style={{ width: "100%", height: "300px" }}  
               alt=""
             />
           </div>
@@ -92,7 +103,9 @@ const Slider = () => {
                 Pick Your Items
               </text>
             </div>
-            <button className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
+            <button 
+            onClick={() => handleAllProd()}
+            className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
               <span className="underline underline-offset-4 hover:no-underline">
                 Explore Products
               </span>
@@ -116,7 +129,9 @@ const Slider = () => {
                   Scented Treasures
                 </text>
               </div>
-              <button className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
+              <button
+              onClick={() => handleTreasureProd()}
+               className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
                 <span className="underline underline-offset-4 hover:no-underline">
                   Explore Products
                 </span>

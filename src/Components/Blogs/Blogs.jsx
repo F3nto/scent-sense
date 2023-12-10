@@ -23,7 +23,7 @@ const Blogs = () => {
   const truncateTxt = (txt, maxlength) => {
     return txt.length > maxlength ? txt.slice(0, maxlength) + "..." : txt;
   };
-
+                      
   const formatDate = (date) => {
     const format = { year: "numeric", month: "long", day: "numeric" };
     return new Date(date).toLocaleDateString(undefined, format);
