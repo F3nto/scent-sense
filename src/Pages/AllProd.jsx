@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import GenderProd from "./Gender/GenderProd";
-import BrandProd from "./Gender/BrandProd";
+import GenderProd from "./Gender && Brand /GenderProd";
+import BrandProd from "./Gender && Brand /BrandProd";
+import AllProducts from "./Gender && Brand /AllProducts";
 import Footer from "../Components/Footer";
 
 const AllProd = () => {
   const genders = ["Men", "Women", "Unisex"];
   const [selectedGender, setSelectedGender] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
-  const [selectedContent, setSelectedContent] = useState(null);
+  const [selectedContent, setSelectedContent] = useState("all");
 
   const [allProdData, setALLProdData] = useState([]);
 
@@ -33,10 +34,18 @@ const AllProd = () => {
     setSelectedContent("brand");
   };
 
+  const handleAllProdChange = () => {
+    setSelectedContent("all");
+    setSelectedBrand(null);
+    setSelectedGender(null);
+
+  }
+
+
   //! Render gender or brand content based on selected content
   const renderContent = () => {
-    if (!selectedContent) {
-      return null;
+    if (selectedContent === "all") {
+      return <AllProducts data={allProdData} />; //! Render all products initially
     }
 
     if (selectedContent === "gender") {
@@ -50,8 +59,11 @@ const AllProd = () => {
       const filteredData = allProdData.filter(
         (prod) => prod.brand === selectedBrand
       );
-      // Return or render brand content here
-      return <div><BrandProd data = {filteredData} /></div>;
+      return (
+        <div>
+          <BrandProd data={filteredData} />
+        </div>
+      );
     }
   };
 
@@ -86,39 +98,52 @@ const AllProd = () => {
 
   return (
     <>
-    <div className="mt-10 flex">
-      <div className="w-1/6 ml-6">
-        <div className="">
-          <h1 className="font-fontbody text-lg">Gender</h1>
-          <div className="flex flex-col ml-4 mt-2 space-y-2">
-            {genders.map((gender, index) => (
-              <div key={index}>
-                <button
-                  onClick={() => handleGenderChange(gender)}
-                  className={`relative transition-all duration-100 hover:text-comTxt ease-in group ${
-                    selectedGender === gender ? "text-comTxt" : "text-slate-500"
-                  }`}
-                >
-                  <span className="font-fontbody">{gender}</span>
-                  <span
-                    className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
+      <div className="mt-10 flex">
+        <div className="w-1/6 ml-6">
+          <div className="">
+            <div>
+              <button
+                onClick={() => handleAllProdChange()}
+                className={`relative transition-all duration-100 hover:text-comTxt ease-in group ${
+                  selectedContent === "all" ? "text-comTxt" : "text-slate-500"
+                }`}
+              > 
+                <span className="font-fontbody">All Perfumes</span>
+                <span
+                  className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
+                  ${selectedContent === "all" ? "scale-x-100 bg-comTxt" : ""}`}
+                ></span>
+              </button>
+            </div>
+            <h1 className="font-fontbody text-lg mt-10">Gender</h1>
+            <div className="flex flex-col ml-4 mt-2 space-y-2">
+              {genders.map((gender, index) => (
+                <div key={index}>
+                  <button
+                    onClick={() => handleGenderChange(gender)}
+                    className={`relative transition-all duration-100 hover:text-comTxt ease-in group ${
+                      selectedGender === gender
+                        ? "text-comTxt"
+                        : "text-slate-500"
+                    }`}
+                  >
+                    <span className="font-fontbody">{gender}</span>
+                    <span
+                      className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
                   ${selectedGender === gender ? "scale-x-100 bg-comTxt" : ""}`}
-                  ></span>
-                </button>
-              </div>
-            ))}
+                    ></span>
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {renderBrandBtn()}
+          {renderBrandBtn()}
+        </div>
+        <div>{renderContent()}</div>
       </div>
-      <div>
-        {renderContent()}
-      </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
-   
   );
 };
 
