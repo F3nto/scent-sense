@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingCart, Person, Favorite } from "@mui/icons-material";
 import Drawer from "./Drawer/Drawer";
+import SignUpAndLogin from "../Auth/SignUpAndLogin";
 const Header = () => {
   const [isClickMenu, setIsClickMenu] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const openAuthModal = () => {
+    setIsAuthModalOpen(true);
+  };
 
   const handleClickMenu = () => {
     setIsClickMenu((prev) => !prev);
@@ -53,14 +59,14 @@ const Header = () => {
             />
           </button>
         </div>
-        <div className="px-3 hidden md:sm:flex items-center">
+        <div className="px-3 hidden md:sm:flex">
           <button>
             <Favorite style={{ width: "40px", height: "35px" }} />
           </button>
           <button className="px-6">
             <ShoppingCart style={{ width: "40px", height: "35px" }} />
           </button>
-          <button>
+          <button onClick={() => openAuthModal()}>
             <Person style={{ width: "40px", height: "40px" }} />
           </button>
         </div>
@@ -104,6 +110,11 @@ const Header = () => {
           </div>
         </div>
         {isClickMenu ? <Drawer onClose={() => closeDrawer()} /> : null}
+        {isAuthModalOpen ? (
+          <div>
+            <SignUpAndLogin onClose={() => setIsAuthModalOpen(false)} />
+          </div>
+        ) : null}
       </div>
     </>
   );

@@ -52,7 +52,7 @@ const BestSeller = () => {
       name: item.name,
     };
 
-    const url = `/best-seller-product?${new URLSearchParams(
+    const url = `/product-detail?${new URLSearchParams(
       queryParams
     ).toString()}`;
     navigate(url, { state: { item } });

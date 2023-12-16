@@ -12,7 +12,7 @@ const AllProd = () => {
   const [selectedContent, setSelectedContent] = useState("all");
 
   const [allProdData, setALLProdData] = useState([]);
-
+            
   useEffect(() => {
     const url = "http://localhost:4000/api/v1/all-products";
 
@@ -67,7 +67,7 @@ const AllProd = () => {
     }
   };
 
-  // Render brand buttons
+  //! Render brand buttons
   const renderBrandBtn = () => {
     const brands = [...new Set(allProdData.map((prod) => prod.brand))];
 

@@ -29,9 +29,7 @@ const Blogs = () => {
     return new Date(date).toLocaleDateString(undefined, format);
   };
 
-  const handleReadMore = () => {
-    navigate(`/blog-detail`);
-  };
+ 
 
   const getInitialItemPerPage = () => {
     return window.innerWidth >= 768 ? 3 : 2;
@@ -69,6 +67,18 @@ const Blogs = () => {
   const currentPost = blogData.slice(firstItemIndex, lastItemIndex);
 
 
+
+  const handleReadMore = (item) => {
+    const queryParams = {
+      _id : item._id,
+      title : item.title
+    }
+
+    const url = `/blog-detail?${new URLSearchParams(queryParams).toString()}`
+
+    navigate(url, {state : {item}})
+  };  
+
   return (
     <div className="mx-2 md:sm:mx-12 mt-12">
       <h1 className="relative flex justify-center items-center font-fontbody text-2xl font-semibold text-center">
@@ -99,7 +109,7 @@ const Blogs = () => {
                 </span>
                 <button
                   className="pl-4 hover:text-comTxt relative transition-all duration-300 ease-in group"
-                  onClick={() => handleReadMore()}
+                  onClick={() => handleReadMore(item)}
                 >
                   <text className="font-fontbody">Read More...</text>
                   <span className="absolute inset-0 left-4 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in"></span>

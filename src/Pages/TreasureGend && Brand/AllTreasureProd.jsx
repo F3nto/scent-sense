@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   FavoriteBorderOutlined,
   ShoppingCart,
 } from "@mui/icons-material";
 
-const AllProducts = ({data}) => {
+const AllProducts = ({ data }) => {
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "250px" : "230px";
   };
@@ -29,6 +30,21 @@ const AllProducts = ({data}) => {
 
   const [prodHeight, setProdHeight] = useState(getInitialHeight());
 
+  const navigate = useNavigate();
+
+  const handleClickView = (item) => {
+    const queryParams = {
+      _id: item._id,
+      name: item.name,
+    };
+
+    const url = `/treasure-product-detail?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+
+    navigate(url, { state: { item } });
+  };
+
   return (
     <div className="">
       <div className="grid grid-cols-4">
@@ -46,7 +62,10 @@ const AllProducts = ({data}) => {
 
                 <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
                   <div className="space-y-3">
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                    <button
+                      onClick={() => handleClickView(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                    >
                       <Search />
                     </button>
                     <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">

@@ -48,7 +48,7 @@ const NewArrival = () => {
       name : item.name
     }
 
-    const url = `/newarrival-product?${new URLSearchParams(queryParams).toString()}`;
+    const url = `/product-detail?${new URLSearchParams(queryParams).toString()}`;
     navigate(url, {state : {item}})
   }
 

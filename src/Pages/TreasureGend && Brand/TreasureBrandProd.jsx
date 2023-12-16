@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   FavoriteBorderOutlined,
@@ -13,7 +13,7 @@ const TreasureBrandProd = ({ data }) => {
 
   const updateWindowDimensions = useCallback(() => {
     setProdHeight(getInitialHeight());
-  });
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +29,21 @@ const TreasureBrandProd = ({ data }) => {
   }, [updateWindowDimensions]);
 
   const [prodHeight, setProdHeight] = useState(getInitialHeight());
+
+  const navigate = useNavigate();
+  const handleClickView = (item) => {
+    const queryParams = {
+      _id: item._id,
+      name: item.name,
+    };
+
+    const url = `/treasure-product-detail?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+
+    navigate(url, { state: { item } });
+  };
+
   return (
     <div>
       <div className="grid grid-cols-4 mr-10">
@@ -47,7 +62,10 @@ const TreasureBrandProd = ({ data }) => {
 
                 <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
                   <div className="space-y-3">
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                    <button
+                      onClick={() => handleClickView(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                    >
                       <Search />
                     </button>
                     <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">

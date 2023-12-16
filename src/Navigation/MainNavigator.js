@@ -1,15 +1,13 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
 //! Pages
 import Home from "../Pages/Home";
 import BlogDetail from "../Pages/BlogDetail";
-import DealProdDetail from "../Pages/DealProdDetail";
-import BestSellerDetail from "../Pages/BestSellerDetail";
-import NewArrivalDetail from "../Pages/NewArrivalDetail";
 import AllProd from "../Pages/AllProd";
-import TreasureProd from "../Pages/TreasureProd";
+import TreasureProd from "../Pages/TreasureProd"; 
+import ProductDetail from "../Pages/ProductDetail";
+import TreasureProdDetail from "../Pages/TreasureProdDetail";
 
 
 const MainNavigator = () => {
@@ -18,11 +16,10 @@ const MainNavigator = () => {
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/blog-detail" Component={BlogDetail}/>
-        <Route path="/deal-product" Component={DealProdDetail} />
-        <Route path="/best-seller-product" Component={BestSellerDetail} />
-        <Route path="/newarrival-product" Component={NewArrivalDetail}/>
         <Route path="/all-products" Component={AllProd}/>
         <Route path="/treasure-products" Component={TreasureProd}/>
+        <Route path="/product-detail" Component={ProductDetail} />
+        <Route path="/treasure-product-detail" Component={TreasureProdDetail} />
        
       </Routes>
     </BrowserRouter>

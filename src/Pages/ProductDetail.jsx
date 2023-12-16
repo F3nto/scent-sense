@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Remove, Add } from "@mui/icons-material";
 
-const NewArrivalDetail = () => {
+const ProductDetail = () => {
   const location = useLocation();
   const {
     state: { item },
@@ -10,6 +10,25 @@ const NewArrivalDetail = () => {
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
+
+  const [hoverState, setHoverState] = useState({
+    remove: false,
+    add: false,
+  });
+
+  const handleMouseEnter = (btnName) => {
+    setHoverState((prevState) => ({
+      ...prevState,
+      [btnName]: true,
+    }));
+  };
+
+  const handleMouseLeave = (btnName) => {
+    setHoverState((prevState) => ({
+      ...prevState,
+      [btnName]: false,
+    }));
+  };
 
   const truncateTxt = (txt, maxlength) => {
     return expanded
@@ -19,37 +38,42 @@ const NewArrivalDetail = () => {
       : txt;
   };
 
-  const [hoverState, setHoverState] = useState({
-    remove : false, 
-    add : false
-  })
-
-  const handleMouseEnter = (btnName) => {
-    setHoverState((prevState) => ({
-      ...prevState,
-      [btnName] : true
-    }))
-  }
-
-  const handleMouseLeave = (btnName) => {
-    setHoverState((prevState) => ({
-      ...prevState,
-      [btnName] : false
-    }))
-  }
-
   const handleReadMore = () => {
     setExpanded((prev) => !prev);
   };
 
+  const getInitialHeight = () => {
+    return window.innerWidth >= 768 ? "100%" : "350px";
+  };
+
+  const [prodHeight, setProdHeight] = useState(getInitialHeight());
+
+  const updateWindowdimension = useCallback(() => {
+    setProdHeight(getInitialHeight());
+  },[]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      updateWindowdimension();
+    };
+    updateWindowdimension();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [updateWindowdimension]);
+
   const renderProdImages = () => {
     const selectedType = item.type.find((prod) => prod.size === selectedSize);
     return (
-      <div className="w-1/2">
+      <div className="w-full sm:w-1/2 flex sm:flex-none justify-center sm:justify-normal items-center">
         <img
-          src={require(`../Assets/images/newArrivalProd/${selectedType.img}`)}
+          src={require(`../Assets/images/AllProd/${selectedType.img}`)}
           className="object-cover shadow-slate-500 shadow-md"
           alt=""
+          style={{ height: prodHeight }}
         />
       </div>
     );
@@ -57,7 +81,7 @@ const NewArrivalDetail = () => {
 
   const renderProdSize = () => {
     return (
-      <div className="flex items-center space-x-6">
+      <div className="flex item-center space-x-6">
         {item.type.map((prod, index) => (
           <div key={index}>
             <button
@@ -65,7 +89,7 @@ const NewArrivalDetail = () => {
               className={`border w-20 h-10 rounded-md ${
                 prod.size === selectedSize
                   ? "border-slate-500 bg-header shadow-slate-400 shadow-sm"
-                  : "bg-slate-200 border-slate-500 hover:bg-header"
+                  : "bg-slate-200 border-slate-500 hover:bg-header "
               }`}
             >
               <span className="font-fontbody text-md tracking-wider">
@@ -80,7 +104,7 @@ const NewArrivalDetail = () => {
 
   const renderProdDetail = () => {
     return (
-      <div className="flex flex-1 flex-col -ml-8 space-y-6">
+      <div className="flex flex-1 flex-col ml-0 sm:-ml-8 space-y-6 items-center sm:items-start mt-6 sm:mt-0">
         <text className="font-fontbody text-2xl">{item.name}</text>
         <text className="font-fontbody text-comTxt text-xl tracking-wider">
           $ {item.type.find((prod) => prod.size === selectedSize).price}
@@ -93,7 +117,7 @@ const NewArrivalDetail = () => {
           </span>
           <button
             onClick={() => handleReadMore()}
-            className="pl-4 hover:text-comTxt relative transition-all duration-300 ease-in group"
+            className="pl-0 sm:pl-4 hover:text-comTxt relative transition-all duration-300 ease-in group"
           >
             <span className="font-fontbody text-slate-700">
               {expanded ? "Read Less" : "Read More..."}
@@ -110,38 +134,39 @@ const NewArrivalDetail = () => {
           {item.gender}
         </text>
 
-        
         <div className="flex justify-center space-x-10">
-        <div className="flex items-center justify-center space-x-4">
-          <button 
-          onMouseEnter={() => handleMouseEnter("remove")}
-          onMouseLeave={() => handleMouseLeave("remove")}
-          className="bg-slate-100 px-2 py-2 rounded-lg hover:bg-header shadow-slate-600 shadow-md">
-            <Remove style={{ color: hoverState.remove ? "##fff" : "#000"}} />
-          </button>
-          <text>1</text>
-          <button
-          onMouseEnter={() => handleMouseEnter("add")}
-          onMouseLeave={() => handleMouseLeave("add")}
-          className="bg-slate-100 px-2 py-2 rounded-lg hover:bg-header shadow-slate-600 shadow-md">
-            <Add style={{ color: hoverState.add ? "#fff" : "#000" }} />
-          </button>
-        </div>
-        <div>
-          <button className="bg-slate-100 px-5 py-2 rounded-lg hover:bg-header shadow-slate-600 shadow-md group">
-            <span className="font-fontbody group-hover:text-white">
-              Add To Cart
-            </span>
-          </button>
-        </div>
+          <div className="flex items-center justify-center space-x-4">
+            <button
+              onMouseEnter={() => handleMouseEnter("remove")}
+              onMouseLeave={() => handleMouseLeave("remove")}
+              className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+            >
+              <Remove style={{ color: hoverState.remove ? "#fff" : "#000" }} />
+            </button>
+            <text>1</text>
+            <button
+              onMouseEnter={() => handleMouseEnter("add")}
+              onMouseLeave={() => handleMouseLeave("add")}
+              className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+            >
+              <Add style={{ color: hoverState.add ? "#fff" : "#000" }} />
+            </button>
+          </div>
+          <div>
+            <button className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group">
+              <span className="font-fontbody group-hover:text-white">
+                Add To Cart
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="mx-12 mt-12">
-      <div className="flex">
+    <div className="mx-2 sm:mx-12 mt-12">
+      <div className="flex flex-col sm:flex-row">
         {renderProdImages()}
         {renderProdDetail()}
       </div>
@@ -149,4 +174,4 @@ const NewArrivalDetail = () => {
   );
 };
 
-export default NewArrivalDetail;
+export default ProductDetail;
