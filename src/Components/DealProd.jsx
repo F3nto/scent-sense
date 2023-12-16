@@ -8,7 +8,12 @@ import {
   Search,
 } from "@mui/icons-material";
 
+//! redux
+import {useDispatch} from "react-redux"
+import { addToWishList, removeWishList} from "../Redux/features/wishListSlide";
+
 const DealProd = () => {
+
   const [dealData, setDealData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
