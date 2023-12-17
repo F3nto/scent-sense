@@ -1,9 +1,25 @@
 import axios from "axios";
 import React, { useState, useEffect, useCallback } from "react";
-import {useNavigate} from "react-router-dom";
-import {Search, FavoriteBorderOutlined, ShoppingCart} from "@mui/icons-material"
+import { useNavigate } from "react-router-dom";
+import {
+  Search,
+  FavoriteBorderOutlined,
+  ShoppingCart,
+} from "@mui/icons-material";
+
+//! redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToWishList,
+  removeWishList,
+} from "../../Redux/features/wishListSlide";
+
 const NewArrival = () => {
   const [newArriProd, setNewArriProd] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const wishList = useSelector((state) => state.wishListArr);
 
   useEffect(() => {
     let url = "http://localhost:4000/api/v1/new-arrival";
@@ -44,13 +60,23 @@ const NewArrival = () => {
   const navigate = useNavigate();
   const handleClickView = (item) => {
     const queryParams = {
-      _id : item._id,
-      name : item.name
-    }
+      _id: item._id,
+      name: item.name,
+    };
 
-    const url = `/product-detail?${new URLSearchParams(queryParams).toString()}`;
-    navigate(url, {state : {item}})
-  }
+    const url = `/product-detail?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+    navigate(url, { state: { item } });
+  };
+
+  const handleFavorite = (clickedItem) => {
+    if (wishList.find((wishListItem) => wishListItem._id === clickedItem._id)) {
+      dispatch(removeWishList(clickedItem._id));
+    } else {
+      dispatch(addToWishList(clickedItem));
+    }
+  };
 
   return (
     <div className="mt-12">
@@ -72,11 +98,27 @@ const NewArrival = () => {
 
               <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
                 <div className="space-y-3">
-                  <button onClick={() => handleClickView(item)} className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                  <button
+                    onClick={() => handleClickView(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
                     <Search />
                   </button>
-                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                    <FavoriteBorderOutlined />
+                  <button
+                    onClick={() => handleFavorite(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    {wishList.some(
+                      (wishListItem) => wishListItem._id === item._id
+                    ) ? (
+                      <img
+                        src={require("../../Assets/icons/heart.png")}
+                        style={{ width: "25px", height: "25px" }}
+                        alt=""
+                      />
+                    ) : (
+                      <FavoriteBorderOutlined />
+                    )}
                   </button>
                   <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
                     <ShoppingCart />

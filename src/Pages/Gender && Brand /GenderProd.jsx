@@ -6,7 +6,17 @@ import {
   ShoppingCart,
 } from "@mui/icons-material";
 
+//! redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToWishList,
+  removeWishList,
+} from "../../Redux/features/wishListSlide";
+
 const GenderProd = ({ data }) => {
+  const dispatch = useDispatch();
+  const wishList = useSelector((state) => state.wishListArr);
+
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "250px" : "230px";
   };
@@ -36,16 +46,25 @@ const GenderProd = ({ data }) => {
       _id: item._id,
       name: item.name,
     };
-    const url = `/product-detail?${new URLSearchParams(queryParams).toString()}`;
+    const url = `/product-detail?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
 
     navigate(url, { state: { item } });
+  };
+
+  const handleFavorite = (clickedItem) => {
+    if (wishList.find((wishListItem) => wishListItem._id === clickedItem._id)) {
+      dispatch(removeWishList(clickedItem._id));
+    } else {
+      dispatch(addToWishList(clickedItem));
+    }
   };
 
   return (
     <div className="">
       <div className="grid grid-cols-4">
         {data.map((item, index) => (
-
           <div key={index} className="px-2">
             <div className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">
               <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
@@ -65,8 +84,21 @@ const GenderProd = ({ data }) => {
                     >
                       <Search />
                     </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
-                      <FavoriteBorderOutlined />
+                    <button
+                      onClick={() => handleFavorite(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
+                    >
+                      {wishList.some(
+                        (wishListItem) => wishListItem._id === item._id
+                      ) ? (
+                        <img
+                          src={require("../../Assets/icons/heart.png")}
+                          style={{ width: "25px", height: "25px" }}
+                          alt=""
+                        />
+                      ) : (
+                        <FavoriteBorderOutlined />
+                      )}
                     </button>
                     <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
                       <ShoppingCart />
@@ -80,7 +112,7 @@ const GenderProd = ({ data }) => {
                   <text className="font-fontbody font-semibold text-md">
                     {item.name}
                   </text>
-                </div>
+                </div>  
               </div>
               <div className="text-center">
                 <text className="font-fontbody text-md text-comTxt">

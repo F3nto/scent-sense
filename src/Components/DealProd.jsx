@@ -1,22 +1,25 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import DealProdPag from "./Pagination/DealProdPag";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import {
   FavoriteBorderOutlined,
   ShoppingCart,
   Search,
 } from "@mui/icons-material";
-
 //! redux
-import {useDispatch} from "react-redux"
-import { addToWishList, removeWishList} from "../Redux/features/wishListSlide";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishList, removeWishList } from "../Redux/features/wishListSlide";
 
 const DealProd = () => {
-
   const [dealData, setDealData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
+
+  const dispatch = useDispatch();
+  const wishList = useSelector((state) => state.wishListArr);
+
+  console.log("wishList Items...", wishList);
 
   const getInitialItemPerPage = () => {
     if (window.innerWidth <= 640) {
@@ -54,6 +57,7 @@ const DealProd = () => {
   const firstItemIndex = lastItemIndex - itemPerPage; //! 4 - 4 = 0
 
   const currentPosts = dealData.slice(firstItemIndex, lastItemIndex);
+  console.log();
 
   useEffect(() => {
     const url = "http://localhost:4000/api/v1/deal";
@@ -68,16 +72,26 @@ const DealProd = () => {
       });
   }, []);
 
-  const navigate = useNavigate();
-  const handleClickView = (item) => {
-    const queryParams = {
-      _id : item._id,
-      name : item.name,
-    }
+  const navigate = useNavigate(); 
+  const handleClickView = (item) => { 
+    const queryParams = { 
+      _id: item._id,  
+      name: item.name,  
+    };  
+        
+    const url = `/product-detail?${new URLSearchParams( 
+      queryParams 
+    ).toString()}`; 
+    navigate(url, { state: { item } });   
+  };      
 
-    const url = `/product-detail?${new URLSearchParams(queryParams).toString()}`
-    navigate(url, {state : {item}})
-  }
+  const handleFavorite = (clickedItem) => {
+    if (wishList.find((item) => item._id === clickedItem._id)) {
+      dispatch(removeWishList(clickedItem._id));
+    } else {
+      dispatch(addToWishList(clickedItem));
+    }
+  };
 
   return (
     <div className="mt-12 mx-2 sm:md:mx-12 bg-[#ffffff]">
@@ -103,11 +117,27 @@ const DealProd = () => {
 
               <div className="absolute right-1 z-10 opacity-0 group-hover:opacity-100 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in">
                 <div className="space-y-3">
-                  <button onClick={() => handleClickView(item)} className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
+                  <button
+                    onClick={() => handleClickView(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
                     <Search />
                   </button>
-                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                    <FavoriteBorderOutlined />
+                  <button
+                    onClick={() => handleFavorite(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    {wishList.some(
+                      (wishListItem) => wishListItem._id === item._id
+                    ) ? (
+                      <img
+                        src={require("../Assets/icons/heart.png")}
+                        style={{ width: "25px", height: "25px" }}
+                        alt=""
+                      />
+                    ) : (
+                      <FavoriteBorderOutlined />
+                    )}
                   </button>
                   <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
                     <ShoppingCart />

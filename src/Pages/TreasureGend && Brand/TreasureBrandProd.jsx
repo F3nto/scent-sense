@@ -6,7 +6,17 @@ import {
   ShoppingCart,
 } from "@mui/icons-material";
 
+//! redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToWishList,
+  removeWishList,
+} from "../../Redux/features/wishListSlide";
+
 const TreasureBrandProd = ({ data }) => {
+  const dispatch = useDispatch();
+  const wishList = useSelector((state) => state.wishListArr);
+
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "300px" : "230px";
   };
@@ -44,6 +54,14 @@ const TreasureBrandProd = ({ data }) => {
     navigate(url, { state: { item } });
   };
 
+  const handleFavorite = (clickedItem) => {
+    if (wishList.find((wishListItem) => wishListItem._id === clickedItem._id)) {
+      dispatch(removeWishList(clickedItem._id));
+    } else {
+      dispatch(addToWishList(clickedItem));
+    }
+  };
+
   return (
     <div>
       <div className="grid grid-cols-4 mr-10">
@@ -68,8 +86,21 @@ const TreasureBrandProd = ({ data }) => {
                     >
                       <Search />
                     </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                      <FavoriteBorderOutlined />
+                    <button
+                      onClick={() => handleFavorite(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                    >
+                      {wishList.some(
+                        (wishListItem) => wishListItem._id === item._id
+                      ) ? (
+                        <img
+                          src={require("../../Assets/icons/heart.png")}
+                          style={{ width: "25px", height: "25px" }}
+                          alt=""
+                        />
+                      ) : (
+                        <FavoriteBorderOutlined />
+                      )}
                     </button>
                     <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
                       <ShoppingCart />

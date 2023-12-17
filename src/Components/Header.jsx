@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { ShoppingCart, Person, Favorite } from "@mui/icons-material";
 import Drawer from "./Drawer/Drawer";
 import SignUpAndLogin from "../Auth/SignUpAndLogin";
+import { useSelector } from "react-redux";
 const Header = () => {
   const [isClickMenu, setIsClickMenu] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const wishListQty = useSelector((state) => state.wishListArr);
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
@@ -60,13 +63,22 @@ const Header = () => {
           </button>
         </div>
         <div className="px-3 hidden md:sm:flex">
-          <button>
+          <button className="relative text-slate-600">
             <Favorite style={{ width: "40px", height: "35px" }} />
+            {wishListQty.length > 0 ? (
+              <div className="absolute -top-3 -right-3 shadow-slate-500 shadow-sm w-7 h-7 flex items-center justify-center rounded-full bg-hovcolor">
+                <text className="text-white font-fontbody text-sm">
+                  {wishListQty.length}
+                </text>
+              </div>
+            ) : (
+              ""
+            )}
           </button>
-          <button className="px-6">
+          <button className="px-6 text-slate-600">
             <ShoppingCart style={{ width: "40px", height: "35px" }} />
           </button>
-          <button onClick={() => openAuthModal()}>
+          <button onClick={() => openAuthModal()} className="text-slate-600">
             <Person style={{ width: "40px", height: "40px" }} />
           </button>
         </div>
