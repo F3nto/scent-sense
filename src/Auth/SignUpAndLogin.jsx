@@ -21,7 +21,7 @@ const SignUpAndLogin = ({ onClose }) => {
       default:
         return null;
     }
-  };
+  };  
 
   return (
     <div onClick={onClose} className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-20">

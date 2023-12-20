@@ -2,15 +2,21 @@ import React, { useState, useEffect } from "react";
 import { ShoppingCart, Person, Favorite } from "@mui/icons-material";
 import Drawer from "./Drawer/Drawer";
 import SignUpAndLogin from "../Auth/SignUpAndLogin";
+import FavoriteModal from "../Modal/FavoriteModal";
 import { useSelector } from "react-redux";
 const Header = () => {
   const [isClickMenu, setIsClickMenu] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isFavModalOpen, setIsFavModalOpen] = useState(false);
 
   const wishListQty = useSelector((state) => state.wishListArr);
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
+  };
+
+  const openFavModal = () => {
+    setIsFavModalOpen(true);
   };
 
   const handleClickMenu = () => {
@@ -63,7 +69,10 @@ const Header = () => {
           </button>
         </div>
         <div className="px-3 hidden md:sm:flex">
-          <button className="relative text-slate-600">
+          <button
+            onClick={() => openFavModal()}
+            className="relative text-slate-600"
+          >
             <Favorite style={{ width: "40px", height: "35px" }} />
             {wishListQty.length > 0 ? (
               <div className="absolute -top-3 -right-3 shadow-slate-500 shadow-sm w-7 h-7 flex items-center justify-center rounded-full bg-hovcolor">
@@ -128,6 +137,9 @@ const Header = () => {
           </div>
         ) : null}
       </div>
+      {isFavModalOpen ? (
+        <FavoriteModal onClose={() => setIsFavModalOpen(false)} />
+      ) : null}
     </>
   );
 };

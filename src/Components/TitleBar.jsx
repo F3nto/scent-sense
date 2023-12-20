@@ -14,7 +14,7 @@ const TitleBar = ({onTitleClick}) => {
   };
 
   return (
-    <div className="bg-[#eaf4f4] w-full h-16 items-center mt-4 hidden md:sm:flex">
+    <div className="bg-[#eaf4f4] w-full h-16 items-center mt-4 hidden md:sm:flex relative">
       <div className="ml-12 bg-slate-300 hover:bg-slate-400 hover:text-white py-5 px-5">
         <button className="flex items-center">
           <Widgets />

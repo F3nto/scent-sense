@@ -90,7 +90,7 @@ const BestSeller = () => {
                 src={require(`../../Assets/images/bestSellerProd/${item.type[0].img}`)}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                 style={{ width: "100%", height: bestProdHeight }}
-                alt=""
+                alt=""  
               />
               <div className="w-52 h-52 rounded-full bg-[#ffffff] absolute"></div>
 
