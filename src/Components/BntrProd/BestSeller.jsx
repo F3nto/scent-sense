@@ -18,7 +18,7 @@ const BestSeller = () => {
 
   const dispatch = useDispatch();
 
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
 
   useEffect(() => {
     const url = "http://localhost:4000/api/v1/bestseller";

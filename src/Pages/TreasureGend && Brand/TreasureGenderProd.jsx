@@ -14,7 +14,7 @@ import { addToWishList, removeWishList } from "../../Redux/features/wishListSlid
 const TreasureGenderProd = ({ data }) => {
 
   const dispatch = useDispatch();
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
 
 
   const getInitialHeight = () => {

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Remove, Add } from "@mui/icons-material";
 
+//! Redux
+
 const ProductDetail = () => {
   const location = useLocation();
   const {
@@ -10,6 +12,7 @@ const ProductDetail = () => {
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
+  const [qty, setQty] = useState(1);
 
   const [hoverState, setHoverState] = useState({
     remove: false,
@@ -50,7 +53,7 @@ const ProductDetail = () => {
 
   const updateWindowdimension = useCallback(() => {
     setProdHeight(getInitialHeight());
-  },[]);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,6 +67,22 @@ const ProductDetail = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [updateWindowdimension]);
+
+  const increaseQtyHandler = () => {
+    setQty(qty + 1);
+  };
+
+  const decreaseQtyHandler = () => {
+    if (qty > 1) {
+      setQty(qty - 1);
+    }
+  };
+
+  const handleQtyChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    setQty(isNaN(value) ? 1 : value)
+
+  }
 
   const renderProdImages = () => {
     const selectedType = item.type.find((prod) => prod.size === selectedSize);
@@ -137,14 +156,21 @@ const ProductDetail = () => {
         <div className="flex justify-center space-x-10">
           <div className="flex items-center justify-center space-x-4">
             <button
+              onClick={() => decreaseQtyHandler()}
               onMouseEnter={() => handleMouseEnter("remove")}
               onMouseLeave={() => handleMouseLeave("remove")}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Remove style={{ color: hoverState.remove ? "#fff" : "#000" }} />
             </button>
-            <text>1</text>
+            <input
+              type="text"
+              value={qty}
+              onChange={handleQtyChange}
+              className="border w-12 text-center border-slate-400 focus:outline-none focus:bg-slate-100"
+            />
             <button
+              onClick={() => increaseQtyHandler()}
               onMouseEnter={() => handleMouseEnter("add")}
               onMouseLeave={() => handleMouseLeave("add")}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"

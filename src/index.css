@@ -3,3 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.adminbutton {
+    @apply px-5 py-2 rounded-md w-full bg-slate-300 hover:bg-header hover:text-white transition duration-300 ease-in-out;
+}
+
+.button:hover {
+    @apply bg-header;
+}

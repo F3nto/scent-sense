@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom"
 import { ShoppingCart, Person, Favorite } from "@mui/icons-material";
 import Drawer from "./Drawer/Drawer";
 import SignUpAndLogin from "../Auth/SignUpAndLogin";
@@ -9,7 +10,8 @@ const Header = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isFavModalOpen, setIsFavModalOpen] = useState(false);
 
-  const wishListQty = useSelector((state) => state.wishListArr);
+  const wishListQty = useSelector((state) => state.wishList?.wishListArr);
+  const cartQty = useSelector((state) => state.cart?.cartArr)
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
@@ -40,6 +42,16 @@ const Header = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const navigate = useNavigate();
+  const shoppingCartHandler = () => {
+
+    const url = `/shopping-cart`;
+
+    navigate(url)
+
+
+  }
 
   return (
     <>
@@ -84,8 +96,19 @@ const Header = () => {
               ""
             )}
           </button>
-          <button className="px-6 text-slate-600">
+          <button
+          onClick={() => shoppingCartHandler()}
+          className="px-6 relative text-slate-600">
             <ShoppingCart style={{ width: "40px", height: "35px" }} />
+            {cartQty.length > 0 ? (
+              <div className="absolute -top-3 right-3 shadow-slate-500 shadow-sm w-7 h-7 flex items-center justify-center rounded-full bg-hovcolor">
+                <text className="text-white font-fontbody text-sm">
+                  {cartQty.length}
+                </text>
+              </div>
+            ) : (
+              ""
+            )}
           </button>
           <button onClick={() => openAuthModal()} className="text-slate-600">
             <Person style={{ width: "40px", height: "40px" }} />

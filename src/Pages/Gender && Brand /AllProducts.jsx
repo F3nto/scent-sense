@@ -13,11 +13,13 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const AllProducts = ({ data }) => {
   const dispatch = useDispatch();
 
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
+  const cart = useSelector((state) => state.cart?.cartArr);
 
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "250px" : "230px";
@@ -76,6 +78,14 @@ const AllProducts = ({ data }) => {
     }
   };
 
+  const handleShoppingCart = (clickedItem) => {
+    if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
+      dispatch(removeFromCart(clickedItem._id));
+    } else {
+      dispatch(addToCart(clickedItem));
+    }
+  };
+
   return (
     <div className="">
       <div className="grid grid-cols-4">
@@ -115,8 +125,17 @@ const AllProducts = ({ data }) => {
                         <FavoriteBorderOutlined />
                       )}
                     </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
-                      <ShoppingCart />
+                    <button
+                      onClick={() => handleShoppingCart(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
+                    >
+                      {cart.some((cartItem) => cartItem._id === item._id) ? (
+                        <div className="text-[#9A4528]">
+                        <ShoppingCart />
+                        </div>
+                      ) : (
+                        <ShoppingCart />
+                      )}
                     </button>
                   </div>
                 </div>

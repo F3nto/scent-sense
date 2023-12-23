@@ -8,7 +8,7 @@ const WishlistItem = ({ item, onClick }) => {
     item.differFolder === "TreasureProd"
       ? require(`../Assets/images/TreasureProd/${item.img}`)
       : require(`../Assets/images/AllProd/${item.type[0].img}`);
-
+          
   return (
     <div className="">
       <button
@@ -33,7 +33,7 @@ const WishlistItem = ({ item, onClick }) => {
 };
 
 const FavoriteModal = ({ onClose }) => {
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
   const navigate = useNavigate();
 
   const handleClickView = (item) => {
@@ -77,16 +77,16 @@ const FavoriteModal = ({ onClose }) => {
           ))
         ) : (
           <div className="flex flex-col justify-center items-center mt-40">
-              <div className=""> 
-                <text className="font-fontbody">No WishList Item !!!</text>
-              </div>
-              <div className="">
-              <img 
-              src={require("../Assets/images/logo-black.png")}
-              className="object-cover w-80"
-              alt=""
-               />
-              </div>
+            <div className="">
+              <text className="font-fontbody">No WishList Item !!!</text>
+            </div>
+            <div className="">
+              <img
+                src={require("../Assets/images/logo-black.png")}
+                className="object-cover w-80"
+                alt=""
+              />
+            </div>
           </div>
         )}
       </div>

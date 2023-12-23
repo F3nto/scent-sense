@@ -15,7 +15,7 @@ import {
 
 const TreasureBrandProd = ({ data }) => {
   const dispatch = useDispatch();
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
 
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "300px" : "230px";

@@ -17,7 +17,7 @@ const DealProd = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
-  const wishList = useSelector((state) => state.wishListArr);
+  const wishList = useSelector((state) => state.wishList?.wishListArr);
 
   console.log("wishList Items...", wishList);
 
