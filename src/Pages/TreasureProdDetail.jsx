@@ -54,16 +54,15 @@ const TreasureProdDetail = () => {
 
   const handleQtyChange = (event) => {
     const value = parseInt(event.target.value, 10);
-    setQty(isNaN(value) ? 1 : value)
-
-  }
+    setQty(isNaN(value) ? 1 : value);
+  };
 
   return (
     <div className="mx-12 mt-12">
       <div className="flex">
         <div className="w-1/2">
           <img
-            src={require(`../Assets/images/TreasureProd/${item.img}`)}
+            src={item.img}
             className="object-cover shadow-slate-500 shadow-md"
             alt=""
           />

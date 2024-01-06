@@ -89,7 +89,7 @@ const ProductDetail = () => {
     return (
       <div className="w-full sm:w-1/2 flex sm:flex-none justify-center sm:justify-normal items-center">
         <img
-          src={require(`../Assets/images/AllProd/${selectedType.img}`)}
+          src={`${selectedType.img}`}
           className="object-cover shadow-slate-500 shadow-md"
           alt=""
           style={{ height: prodHeight }}

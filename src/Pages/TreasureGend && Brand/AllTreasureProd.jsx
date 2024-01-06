@@ -12,11 +12,12 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const AllProducts = ({ data }) => {
   const dispatch = useDispatch();
   const wishList = useSelector((state) => state.wishList?.wishListArr);
-
+  const cart = useSelector((state) => state.cart?.cartArr);
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "250px" : "230px";
   };
@@ -63,6 +64,14 @@ const AllProducts = ({ data }) => {
     }
   };
 
+  const handleShoppingCart = (clickedItem) => {
+    if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
+      dispatch(removeFromCart(clickedItem._id));
+    } else {
+      dispatch(addToCart(clickedItem));
+    }
+  };
+
   return (
     <div className="">
       <div className="grid grid-cols-4">
@@ -71,7 +80,7 @@ const AllProducts = ({ data }) => {
             <div className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">
               <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
                 <img
-                  src={require(`../../Assets/images/TreasureProd/${item.img}`)}
+                  src={item.img}
                   className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                   style={{ width: "100%", height: prodHeight }}
                   alt=""
@@ -86,22 +95,33 @@ const AllProducts = ({ data }) => {
                     >
                       <Search />
                     </button>
-                    <button 
-                    onClick={() => handleFavorite(item)}
-                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
-                     {
-                      wishList.some((wishListItem) => wishListItem._id === item._id) ?
-                      <img
-                      src={require("../../Assets/icons/heart.png")}
-                      style={{ width: "25px", height: "25px" }}
-                      alt=""
-                    />
-                      :
-                      <FavoriteBorderOutlined />
-                     }
+                    <button
+                      onClick={() => handleFavorite(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
+                    >
+                      {wishList.some(
+                        (wishListItem) => wishListItem._id === item._id
+                      ) ? (
+                        <img
+                          src={require("../../Assets/icons/heart.png")}
+                          style={{ width: "25px", height: "25px" }}
+                          alt=""
+                        />
+                      ) : (
+                        <FavoriteBorderOutlined />
+                      )}
                     </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
-                      <ShoppingCart />
+                    <button
+                      onClick={() => handleShoppingCart(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
+                    >
+                      {cart.some((cartItem) => cartItem._id === item._id) ? (
+                        <div className="text-[#9a4528]">
+                          <ShoppingCart />
+                        </div>
+                      ) : (
+                        <ShoppingCart />
+                      )}
                     </button>
                   </div>
                 </div>

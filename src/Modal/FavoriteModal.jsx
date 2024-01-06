@@ -4,11 +4,8 @@ import { Close } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 
 const WishlistItem = ({ item, onClick }) => {
-  const imgUrl =
-    item.differFolder === "TreasureProd"
-      ? require(`../Assets/images/TreasureProd/${item.img}`)
-      : require(`../Assets/images/AllProd/${item.type[0].img}`);
-          
+  const imgUrl = item.type === "TreasureProd" ? item.img : item.type[0].img;
+
   return (
     <div className="">
       <button

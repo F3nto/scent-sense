@@ -1,8 +1,67 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
 
 const ShoppingCart = () => {
   const cart = useSelector((state) => state.cart?.cartArr);
+  console.log("cart Item...", cart);
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 70 },
+    {
+      field: "img",
+      headerName: "Image",
+      width: 100,
+      renderCell: (params) => {
+        const item = cart[params.row.id - 1];
+        const imgSrc =
+          item.type === "TreasureProd" ? item.img : item.type[0].img;
+
+        return (
+          <div className="w-12 h-12 relative flex justify-center items-center rounded-sm shadow-black shadow-sm bg-slate-300">
+            <img
+              src={imgSrc}
+              alt=""
+              className={`object-cover z-10 w-full h-full`}
+            />
+            <div className="w-10 h-10 rounded-full bg-[#ffffff] absolute" />
+          </div>
+        );
+      },
+    },
+    {
+      field: "name",
+      headerName: "Item",
+      width: 250,
+      renderCell: (params) => (
+        <div className="flex items-center">
+          <div className="">{cart[params.row.id - 1].name}</div>
+        </div>
+      ),
+    },
+    { field: "price", 
+    headerName: "Price", 
+    width: 120,
+    renderCell : (params) => {
+      const item = cart[params.row.id - 1];
+      const prices = item.type === "TreasureProd" ? item.price : item.type[0].price;
+
+      return (
+        <div>{prices}</div>
+      );
+     }  
+   },
+    { field: "quantity", headerName: "Quantity", width: 120 },
+    { field: "total", headerName: "Total", width: 120 },
+  ];
+  
+
+ 
+  const rows = cart.map((item, index) => ({
+    id: index + 1,
+    quantity: "quantity", // Replace with actual quantity
+    total: "total", // Replace with actual total
+  }));
 
   return (
     <div className="container mx-auto mt-12">
@@ -14,39 +73,15 @@ const ShoppingCart = () => {
       </div>
 
       <div className="flex justify-center items-center mt-10">
-        <table className="w-2/3">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="py-2 px-4 text-left">Item</th>
-              <th className="py-2 px-4 text-center">Price</th>
-              <th className="py-2 px-4 text-center">Quantity</th>
-              <th className="py-2 px-4 text-center">Total</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {cart.map((item, index) => (
-              <tr key={index} className="border-t">
-                <td className="py-4 px-4 flex items-center">
-                  <div className="flex-shrink-0 w-12 h-12">
-                    <div className="relative flex justify-center items-center rounded-sm shadow-black shadow-sm bg-slate-300">
-                      <img
-                        src={require(`../Assets/images/AllProd/${item.type[0].img}`)}
-                        alt=""
-                        className={`object-cover z-10 w-full h-full`  }
-                      />
-                      <div className="w-10 h-10 rounded-full bg-[#ffffff] absolute" />
-                    </div>
-                  </div>
-                  <div className="ml-4">{item.name}</div>
-                </td>
-                <td className="py-4 px-4 text-center">${item.type[0].price}</td>
-                <td className="py-4 px-4 text-center">quantity</td>
-                <td className="py-4 px-4 text-center">total</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div style={{ height: 400, width: "70%" }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            checkboxSelection={false}
+            disableSelectionOnClick
+          />
+        </div>
 
         <div className="flex-1 bg-orange-600 p-6 text-white">
           <div className="text-xl font-bold mb-4">Order Summary</div>
@@ -71,4 +106,4 @@ const ShoppingCart = () => {
   );
 };
 
-export default ShoppingCart;  
+export default ShoppingCart;

@@ -88,7 +88,7 @@ const NewArrival = () => {
           >
             <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
               <img
-                src={require(`../../Assets/images/newArrivalProd/${item.type[0].img}`)}
+                src={`${item.type[0].img}`}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                 style={{ width: "100%", height: newArrProdHeight }}
                 alt=""

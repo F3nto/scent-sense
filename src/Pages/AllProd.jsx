@@ -12,7 +12,7 @@ const AllProd = () => {
   const [selectedContent, setSelectedContent] = useState("all");
 
   const [allProdData, setALLProdData] = useState([]);
-            
+
   useEffect(() => {
     const url = "http://localhost:4000/api/v1/all-products";
 
@@ -38,9 +38,7 @@ const AllProd = () => {
     setSelectedContent("all");
     setSelectedBrand(null);
     setSelectedGender(null);
-
-  }
-
+  };
 
   //! Render gender or brand content based on selected content
   const renderContent = () => {
@@ -107,7 +105,7 @@ const AllProd = () => {
                 className={`relative transition-all duration-100 hover:text-comTxt ease-in group ${
                   selectedContent === "all" ? "text-comTxt" : "text-slate-500"
                 }`}
-              > 
+              >
                 <span className="font-fontbody">All Perfumes</span>
                 <span
                   className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in

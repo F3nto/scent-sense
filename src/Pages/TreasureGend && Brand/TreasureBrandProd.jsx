@@ -70,7 +70,7 @@ const TreasureBrandProd = ({ data }) => {
             <div className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">
               <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
                 <img
-                  src={require(`../../Assets/images/TreasureProd/${item.img}`)}
+                  src = {item.img}
                   className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                   style={{ width: "100%", height: prodHeight }}
                   alt=""

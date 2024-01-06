@@ -10,8 +10,6 @@ import ProductDetail from "../Pages/ProductDetail";
 import TreasureProdDetail from "../Pages/TreasureProdDetail";
 import ShoppingCart from "../Pages/ShoppingCart";
 
-//! admin
-import Admin from "../Admin/Admin";
 
 const MainNavigator = () => {
   return (
@@ -25,10 +23,6 @@ const MainNavigator = () => {
         <Route path="/treasure-product-detail" Component={TreasureProdDetail} />
 
         <Route path="/shopping-cart" Component={ShoppingCart} />
-
-
-     
-        <Route path="/admin" Component={Admin}/> 
       </Routes>
     </BrowserRouter>
   );

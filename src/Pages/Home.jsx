@@ -3,7 +3,7 @@ import Header from "../Components/Header";
 import TitleBar from "../Components/TitleBar";
 import Slider from "../Components/Slider";
 import DealProd from "../Components/DealProd";
-import PromoSession from "../Components/PromoSession";
+// import PromoSession from "../Components/PromoSession";
 import BntrProd from "../Components/BntrProd";
 import Blogs from "../Components/Blogs/Blogs";
 import Footer from "../Components/Footer";
@@ -28,7 +28,7 @@ const Home = () => {
       <TitleBar onTitleClick={handleTitleClick} />
       <Slider />
       <DealProd />
-      <PromoSession />
+      {/* <PromoSession /> */}
       <BntrProd />
       <div ref={blogRef}>
         <Blogs />

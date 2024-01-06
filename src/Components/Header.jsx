@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <>
       <div className="flex bg-header p-7 ">
-        <span className="font-fontbody pl-5">Welcome to Scent sense.</span>
+        <span className="font-fontbody pl-5">Welcome to Scent-sense</span>
       </div>
       <div className="flex justify-between items-center mx-4 md:mx-12 mt-4 relative">
         <div>
