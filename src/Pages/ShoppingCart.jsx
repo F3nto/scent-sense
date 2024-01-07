@@ -39,24 +39,22 @@ const ShoppingCart = () => {
         </div>
       ),
     },
-    { field: "price", 
-    headerName: "Price", 
-    width: 120,
-    renderCell : (params) => {
-      const item = cart[params.row.id - 1];
-      const prices = item.type === "TreasureProd" ? item.price : item.type[0].price;
+    {
+      field: "price",
+      headerName: "Price",
+      width: 120,
+      renderCell: (params) => {
+        const item = cart[params.row.id - 1];
+        const prices =
+          item.type === "TreasureProd" ? item.price : item.type[0].price;
 
-      return (
-        <div>{prices}</div>
-      );
-     }  
-   },
+        return <div>{prices}</div>;
+      },
+    },
     { field: "quantity", headerName: "Quantity", width: 120 },
     { field: "total", headerName: "Total", width: 120 },
   ];
-  
 
- 
   const rows = cart.map((item, index) => ({
     id: index + 1,
     quantity: "quantity", // Replace with actual quantity

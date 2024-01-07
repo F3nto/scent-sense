@@ -10,6 +10,7 @@ import {
 //! redux
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishList, removeWishList } from "../Redux/features/wishListSlide";
+import { addToCart, removeFromCart } from "../Redux/features/addToCartSlide";
 
 const DealProd = () => {
   const [dealData, setDealData] = useState([]);
@@ -19,7 +20,7 @@ const DealProd = () => {
   const dispatch = useDispatch();
   const wishList = useSelector((state) => state.wishList?.wishListArr);
 
-  console.log("wishList Items...", wishList);
+  const cart = useSelector((state) => state.cart?.cartArr);
 
   const getInitialItemPerPage = () => {
     if (window.innerWidth <= 640) {
@@ -72,24 +73,32 @@ const DealProd = () => {
       });
   }, []);
 
-  const navigate = useNavigate(); 
-  const handleClickView = (item) => { 
-    const queryParams = { 
-      _id: item._id,  
-      name: item.name,  
-    };  
-        
-    const url = `/product-detail?${new URLSearchParams( 
-      queryParams 
-    ).toString()}`; 
-    navigate(url, { state: { item } });   
-  };      
+  const navigate = useNavigate();
+  const handleClickView = (item) => {
+    const queryParams = {
+      _id: item._id,
+      name: item.name,
+    };
+
+    const url = `/product-detail?${new URLSearchParams(
+      queryParams
+    ).toString()}`;
+    navigate(url, { state: { item } });
+  };
 
   const handleFavorite = (clickedItem) => {
     if (wishList.find((item) => item._id === clickedItem._id)) {
       dispatch(removeWishList(clickedItem._id));
     } else {
       dispatch(addToWishList(clickedItem));
+    }
+  };
+
+  const handleShoppingCart = (clickedItem) => {
+    if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
+      dispatch(removeFromCart(clickedItem._id));
+    } else {
+      dispatch(addToCart(clickedItem));
     }
   };
 
@@ -139,8 +148,17 @@ const DealProd = () => {
                       <FavoriteBorderOutlined />
                     )}
                   </button>
-                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                    <ShoppingCart />
+                  <button
+                    onClick={() => handleShoppingCart(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    {cart.some((cartItem) => cartItem._id === item._id) ? (
+                      <div className="text-[#9a4528]">
+                        <ShoppingCart />
+                      </div>
+                    ) : (
+                      <ShoppingCart />
+                    )}
                   </button>
                 </div>
               </div>

@@ -12,6 +12,7 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const BestSeller = () => {
   const [bestSellerProd, setBestSellerProd] = useState([]);
@@ -19,6 +20,7 @@ const BestSeller = () => {
   const dispatch = useDispatch();
 
   const wishList = useSelector((state) => state.wishList?.wishListArr);
+  const cart = useSelector((state) => state.cart?.cartArr);
 
   useEffect(() => {
     const url = "http://localhost:4000/api/v1/bestseller";
@@ -77,6 +79,14 @@ const BestSeller = () => {
     }
   };
 
+  const handleShoppingCart = (clickedItem) => {
+    if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
+      dispatch(removeFromCart(clickedItem._id));
+    } else {
+      dispatch(addToCart(clickedItem));
+    }
+  };
+
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-between items-center">
@@ -90,7 +100,7 @@ const BestSeller = () => {
                 src={`${item.type[0].img}`}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
                 style={{ width: "100%", height: bestProdHeight }}
-                alt=""  
+                alt=""
               />
               <div className="w-52 h-52 rounded-full bg-[#ffffff] absolute"></div>
 
@@ -118,8 +128,17 @@ const BestSeller = () => {
                       <FavoriteBorderOutlined />
                     )}
                   </button>
-                  <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                    <ShoppingCart />
+                  <button
+                    onClick={() => handleShoppingCart(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    {cart.some((cartItem) => cartItem._id === item._id) ? (
+                      <div className="text-[#9a4528]">
+                        <ShoppingCart />
+                      </div>
+                    ) : (
+                      <ShoppingCart />
+                    )}
                   </button>
                 </div>
               </div>
