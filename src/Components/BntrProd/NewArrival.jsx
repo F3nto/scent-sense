@@ -13,7 +13,7 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
-import { addToCart, cartSliceReducer, removeFromCart } from "../../Redux/features/addToCartSlide"; 
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide"; 
 
 const NewArrival = () => {
   const [newArriProd, setNewArriProd] = useState([]);
@@ -91,7 +91,7 @@ const NewArrival = () => {
 
   return (
     <div className="mt-12">
-      <div className="flex flex-wrap justify-between items-center">
+      <div className="flex flex-wrap justify-between items-center"> 
         {newArriProd.map((item, index) => (
           <div
             key={index}

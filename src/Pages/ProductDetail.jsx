@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Remove, Add } from "@mui/icons-material";
+import {
+  incQty,
+  decQty,
+  setQty,
+  setInstock,
+} from "../Redux/features/qtyControlSlide";
+import { useDispatch, useSelector } from "react-redux";
 
 //! Redux
 
@@ -10,9 +17,13 @@ const ProductDetail = () => {
     state: { item },
   } = location;
 
+  const dispatch = useDispatch();
+
+  const qty = useSelector((state) => state.quantity?.quantity);
+  const instockFromRedux = useSelector((state) => state.quantity?.instock);
+
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
-  const [qty, setQty] = useState(1);
 
   const [hoverState, setHoverState] = useState({
     remove: false,
@@ -55,34 +66,34 @@ const ProductDetail = () => {
     setProdHeight(getInitialHeight());
   }, []);
 
+  const selectedType = item.type.find((prod) => prod.size === selectedSize);
   useEffect(() => {
     const handleResize = () => {
       updateWindowdimension();
     };
     updateWindowdimension();
 
+    dispatch(setInstock(selectedType.instock - 1));
+
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [updateWindowdimension]);
+  }, [updateWindowdimension, dispatch, selectedType.instock]);
 
   const increaseQtyHandler = () => {
-    setQty(qty + 1);
+    dispatch(incQty());
   };
 
   const decreaseQtyHandler = () => {
-    if (qty > 1) {
-      setQty(qty - 1);
-    }
+    dispatch(decQty());
   };
 
   const handleQtyChange = (event) => {
     const value = parseInt(event.target.value, 10);
-    setQty(isNaN(value) ? 1 : value)
-
-  }
+    dispatch(setQty(isNaN(value) ? 1 : value));
+  };
 
   const renderProdImages = () => {
     const selectedType = item.type.find((prod) => prod.size === selectedSize);
@@ -152,6 +163,11 @@ const ProductDetail = () => {
           <span className="font-fontbody text-slate-700">Gender - </span>
           {item.gender}
         </text>
+
+        <div className="flex items-center text-comTxt">
+          <span className="font-fontbody text-slate-700">In Stock : </span>
+          {instockFromRedux}
+        </div>
 
         <div className="flex justify-center space-x-10">
           <div className="flex items-center justify-center space-x-4">
