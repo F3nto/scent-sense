@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   quantity: 1,
-  instock: 0,
+  instock: [],
 };
 
 export const quantitySlice = createSlice({
@@ -10,31 +10,35 @@ export const quantitySlice = createSlice({
   initialState,
   reducers: {
     incQty: (state) => {
-      if (state.instock === 0) {
-        return state;
-      }
-
       const newQuantity = state.quantity + 1;
-      const newInstock = state.instock > 0 ? state.instock - 1 : state.instock;
+
+      const updatedInstock = state.instock.map((item) => {
+        return {
+          ...item,
+          instock: item.instock - 1,
+        };
+      });
 
       return {
         ...state,
         quantity: newQuantity,
-        instock: newInstock,
+        instock: updatedInstock,
       };
     },
     decQty: (state) => {
-      const newQuantity =
-        state.quantity > 1 ? state.quantity - 1 : state.quantity;
-      const newInstock = state.instock + 1;
-      if (state.quantity === 1) {
-        return state;
-      }
+      const newQuantity = Math.max(state.quantity - 1, 1);
+
+      const updatedInstock = state.instock.map((item) => {
+        return {
+          ...item,
+          instock: item.instock + 1,
+        };
+      });
 
       return {
         ...state,
         quantity: newQuantity,
-        instock: newInstock,
+        instock: updatedInstock,
       };
     },
     setQty: (state, action) => {
@@ -44,9 +48,20 @@ export const quantitySlice = createSlice({
       };
     },
     setInstock: (state, action) => {
+      const instockArray = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      const updatedInstock = instockArray.map((item) => {
+        return {
+          _id: item._id,
+          instock: item.instock,
+        };
+      });
+
       return {
         ...state,
-        instock: action.payload,
+        instock: updatedInstock,
       };
     },
   },

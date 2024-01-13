@@ -1,10 +1,30 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
+import { useDispatch } from "react-redux";
+import { Remove, Add } from "@mui/icons-material";
+import { decQty, incQty, setQty } from "../Redux/features/qtyControlSlide";
 
 const ShoppingCart = () => {
   const cart = useSelector((state) => state.cart?.cartArr);
+  const qty = useSelector((state) => state.qtyAndInstockController?.quantity);
   console.log("cart Item...", cart);
+  const dispatch = useDispatch();
+
+  const handleQtyChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    dispatch(setQty(isNaN(value) ? 1 : value));
+  };
+
+  const increaseQtyHandler = () => {
+    dispatch(incQty());
+  };
+
+  const decreaseQtyHandler = () => {
+    dispatch(decQty());
+  };
+
+  //! columns
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -33,11 +53,14 @@ const ShoppingCart = () => {
       field: "name",
       headerName: "Item",
       width: 250,
-      renderCell: (params) => (
-        <div className="flex items-center">
-          <div className="">{cart[params.row.id - 1].name}</div>
-        </div>
-      ),
+      renderCell: (params) => {
+        const item = cart[params.row.id - 1];
+        return (
+          <div className="flex items-center">
+            <div className="">{item.name}</div>
+          </div>
+        );
+      },
     },
     {
       field: "price",
@@ -51,14 +74,49 @@ const ShoppingCart = () => {
         return <div>{prices}</div>;
       },
     },
-    { field: "quantity", headerName: "Quantity", width: 120 },
+    {
+      field: "quantity",
+      headerName: "Quantity",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <div className="flex items-center justify-center space-x-4">
+            <button
+              onClick={() => decreaseQtyHandler()}
+              className="bg-header px-2 py-1.5 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+            >
+              <Remove
+                className="hover:text-white"
+                style={{ width: "20px", height: "20px" }}
+              />
+            </button>
+            <input
+              type="text"
+              value={qty}
+              onChange={handleQtyChange}
+              className="border w-12 py-1 shadow-slate-300 shadow-inner text-center rounded-md focus:outline-none focus:bg-slate-100"
+            />
+            <button
+              onClick={() => increaseQtyHandler()}
+              className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+            >
+              <Add
+                className="hover:text-white"
+                style={{ width: "20px", height: "20px" }}
+              />
+            </button>
+          </div>
+        );
+      },
+    },
     { field: "total", headerName: "Total", width: 120 },
   ];
 
+  //! Rows
+
   const rows = cart.map((item, index) => ({
     id: index + 1,
-    quantity: "quantity", // Replace with actual quantity
-    total: "total", // Replace with actual total
+    quantity: qty,
   }));
 
   return (
@@ -71,7 +129,9 @@ const ShoppingCart = () => {
       </div>
 
       <div className="flex justify-center items-center mt-10">
-        <div style={{ height: 400, width: "70%" }}>
+        <div
+          style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
+        >
           <DataGrid
             rows={rows}
             columns={columns}

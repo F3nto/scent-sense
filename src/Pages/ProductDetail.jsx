@@ -8,6 +8,8 @@ import {
   setInstock,
 } from "../Redux/features/qtyControlSlide";
 import { useDispatch, useSelector } from "react-redux";
+// import { useMutation, useMutationState } from "@tanstack/react-query";
+// import axios from "axios";
 
 //! Redux
 
@@ -19,30 +21,15 @@ const ProductDetail = () => {
 
   const dispatch = useDispatch();
 
-  const qty = useSelector((state) => state.quantity?.quantity);
-  const instockFromRedux = useSelector((state) => state.quantity?.instock);
+  const qty = useSelector((state) => state.qtyAndInstockController?.quantity);
+  const instockFromRedux = useSelector(
+    (state) => state.qtyAndInstockController?.instock
+  );
+
+  console.log("instock from redux...", instockFromRedux);
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
-
-  const [hoverState, setHoverState] = useState({
-    remove: false,
-    add: false,
-  });
-
-  const handleMouseEnter = (btnName) => {
-    setHoverState((prevState) => ({
-      ...prevState,
-      [btnName]: true,
-    }));
-  };
-
-  const handleMouseLeave = (btnName) => {
-    setHoverState((prevState) => ({
-      ...prevState,
-      [btnName]: false,
-    }));
-  };
 
   const truncateTxt = (txt, maxlength) => {
     return expanded
@@ -66,21 +53,51 @@ const ProductDetail = () => {
     setProdHeight(getInitialHeight());
   }, []);
 
-  const selectedType = item.type.find((prod) => prod.size === selectedSize);
   useEffect(() => {
     const handleResize = () => {
       updateWindowdimension();
     };
     updateWindowdimension();
 
-    dispatch(setInstock(selectedType.instock - 1));
-
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [updateWindowdimension, dispatch, selectedType.instock]);
+  }, [updateWindowdimension]);
+
+  // const updateInstock = () => {
+  //   const selectedType = item.type.find((prod) => prod.size === selectedSize);
+  //   dispatch(
+  //     setInstock({ _id: selectedType._id, instock: selectedType.instock })
+  //   );
+  // };
+
+  // const mutationKey = ["patch"];
+
+  // const mutation = useMutation({
+  //   mutationKey,
+  //   mutationFn: () => {
+  //     return axios.patch(
+  //       `http://localhost:4000/api/v1/all-products/${item._id}`,
+  //       {
+  //         instock: instockFromRedux,
+  //       }
+  //     );
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log("API put success!", data);
+  //   },
+  //   onError: (error) => {
+  //     console.error("API put fail!!!", error);
+  //   },
+  // });
+
+  // const { isError, isSuccess } = mutation;
+
+  const handleSizeChange = (newSize) => {
+    setSelectedSize(newSize);
+  };
 
   const increaseQtyHandler = () => {
     dispatch(incQty());
@@ -94,6 +111,13 @@ const ProductDetail = () => {
     const value = parseInt(event.target.value, 10);
     dispatch(setQty(isNaN(value) ? 1 : value));
   };
+
+  // useEffect(() => {
+  //   updateInstock();
+  //   if(instockFromRedux) {
+  //     mutation.mutate()
+  //   }
+  // }, [item, selectedSize]);
 
   const renderProdImages = () => {
     const selectedType = item.type.find((prod) => prod.size === selectedSize);
@@ -115,7 +139,7 @@ const ProductDetail = () => {
         {item.type.map((prod, index) => (
           <div key={index}>
             <button
-              onClick={() => setSelectedSize(prod.size)}
+              onClick={() => handleSizeChange(prod.size)}
               className={`border w-20 h-10 rounded-md ${
                 prod.size === selectedSize
                   ? "border-slate-500 bg-header shadow-slate-400 shadow-sm"
@@ -165,19 +189,19 @@ const ProductDetail = () => {
         </text>
 
         <div className="flex items-center text-comTxt">
-          <span className="font-fontbody text-slate-700">In Stock : </span>
-          {instockFromRedux}
+          <span className="font-fontbody text-slate-700">In Stock: </span>
+          {instockFromRedux.map((prod) => (
+                <span key={prod._id}>{prod.instock}</span>
+              ))}
         </div>
 
         <div className="flex justify-center space-x-10">
           <div className="flex items-center justify-center space-x-4">
             <button
               onClick={() => decreaseQtyHandler()}
-              onMouseEnter={() => handleMouseEnter("remove")}
-              onMouseLeave={() => handleMouseLeave("remove")}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
-              <Remove style={{ color: hoverState.remove ? "#fff" : "#000" }} />
+              <Remove className="hover:text-white" />
             </button>
             <input
               type="text"
@@ -187,11 +211,9 @@ const ProductDetail = () => {
             />
             <button
               onClick={() => increaseQtyHandler()}
-              onMouseEnter={() => handleMouseEnter("add")}
-              onMouseLeave={() => handleMouseLeave("add")}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
-              <Add style={{ color: hoverState.add ? "#fff" : "#000" }} />
+              <Add className="hover:text-white" />
             </button>
           </div>
           <div>
