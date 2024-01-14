@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
 import DealProdPag from "./Pagination/DealProdPag";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,10 +10,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishList, removeWishList } from "../Redux/features/wishListSlide";
 import { addToCart, removeFromCart } from "../Redux/features/addToCartSlide";
+import { useQuery } from "@tanstack/react-query";
+import { getDealProd } from "../Api/DealApi";
 
 const DealProd = () => {
-  const [dealData, setDealData] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
@@ -54,24 +53,6 @@ const DealProd = () => {
   }, [updateWindowDimensions]);
   const [itemPerPage, setItemPerPage] = useState(getInitialItemPerPage());
   const [prodHeight, setProdHeight] = useState(getInitialProdHeight());
-  const lastItemIndex = currentPage * itemPerPage; //! 1 * 4 = 4
-  const firstItemIndex = lastItemIndex - itemPerPage; //! 4 - 4 = 0
-
-  const currentPosts = dealData.slice(firstItemIndex, lastItemIndex);
-  console.log();
-
-  useEffect(() => {
-    const url = "http://localhost:4000/api/v1/deal";
-
-    axios
-      .get(`${url}`)
-      .then((res) => {
-        setDealData(res.data);
-      })
-      .catch((err) => {
-        console.log("error...", err);
-      });
-  }, []);
 
   const navigate = useNavigate();
   const handleClickView = (item) => {
@@ -85,6 +66,20 @@ const DealProd = () => {
     ).toString()}`;
     navigate(url, { state: { item } });
   };
+
+  const { error, isPending, data } = useQuery({
+    queryKey: ["deal"],
+    queryFn: getDealProd,
+  });
+
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
+  const lastItemIndex = currentPage * itemPerPage; //! 1 * 4 = 4
+  const firstItemIndex = lastItemIndex - itemPerPage; //! 4 - 4 = 0
+
+  const currentPosts = data.slice(firstItemIndex, lastItemIndex);
 
   const handleFavorite = (clickedItem) => {
     if (wishList.find((item) => item._id === clickedItem._id)) {
@@ -177,7 +172,7 @@ const DealProd = () => {
         ))}
       </div>
       <DealProdPag
-        totalLength={dealData.length}
+        totalLength={data.length}
         itemPerPage={itemPerPage}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}

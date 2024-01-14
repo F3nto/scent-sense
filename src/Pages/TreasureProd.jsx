@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import TreasureGenderProd from "./TreasureGend && Brand/TreasureGenderProd";
 import TreasureBrandProd from "./TreasureGend && Brand/TreasureBrandProd";
 import AllTreasureProd from "./TreasureGend && Brand/AllTreasureProd";
 import Footer from "../Components/Footer";
+import {getTreasureProd} from "../Api/TreasureProdApi"
+import { useQuery } from "@tanstack/react-query";
 
 const TreasureProd = () => {
   const genders = ["Men", "Women", "Unisex"];
@@ -11,15 +12,14 @@ const TreasureProd = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedContent, setSelectedContent] = useState("all");
 
-  const [treasureData, setTreasureData] = useState([]);
+  const {error, isPending, data} = useQuery({
+    queryKey : ["Treasure-products"],
+    queryFn : getTreasureProd
+    
+  })
 
-  useEffect(() => {
-    const url = "http://localhost:4000/api/v1/treasure-products";
-
-    axios.get(`${url}`).then((res) => {
-      setTreasureData(res.data);
-    });
-  }, []);
+  if(isPending) return "Loading...";
+  if(error) return "An error has occured: " + error.message;
 
   const handleGenderChange = (gender) => {
     setSelectedGender(gender === selectedGender ? null : gender);
@@ -43,21 +43,20 @@ const TreasureProd = () => {
   //! Render gender or brand content based on selected content
   const renderContent = () => {
     if (selectedContent === "all") {
-      return <AllTreasureProd data={treasureData} />; //! Render all products initially
+      return <AllTreasureProd data={data} />; //! Render all products initially
     }
 
     if (selectedContent === "gender") {
-      const filteredData = treasureData.filter(
+      const filteredData = data.filter(
         (prod) => prod.gender === selectedGender
       );
       return <TreasureGenderProd data={filteredData} />;
     }
 
     if (selectedContent === "brand") {
-      const filteredData = treasureData.filter(
+      const filteredData = data.filter(
         (prod) => prod.brand === selectedBrand
       );
-      // Return or render brand content here
       return (
         <div>
           <TreasureBrandProd data={filteredData} />
@@ -68,12 +67,14 @@ const TreasureProd = () => {
 
   // Render brand buttons
   const renderBrandBtn = () => {
-    const brands = [...new Set(treasureData.map((prod) => prod.brand))];
+    const brands = [...new Set(data.map((prod) => prod.brand))];
 
     return (
       <div className="mt-10">
         <h1 className="font-fontbody text-lg">Brand</h1>
-        <div className="flex flex-col ml-4 mt-2 space-y-2">
+        <div className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
+        scrollbar-track-header scrollbar-thumb-hovcolor max-h-52 overflow-y-auto mr-10 overflow-x-auto"
+        >
           {brands.map((brand, index) => (
             <div key={index}>
               <button

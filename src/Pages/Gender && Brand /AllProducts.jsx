@@ -46,7 +46,7 @@ const AllProducts = ({ data }) => {
   const [prodHeight, setProdHeight] = useState(getInitialHeight());
 
   const getInitialItemPerPage = () => {
-    return 12;
+    return 12
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -88,7 +88,7 @@ const AllProducts = ({ data }) => {
 
   return (
     <div className="">
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {currentPosts.map((item, index) => (
           <div key={index} className="px-2">
             <div className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">

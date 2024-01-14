@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import GenderProd from "./Gender && Brand /GenderProd";
 import BrandProd from "./Gender && Brand /BrandProd";
 import AllProducts from "./Gender && Brand /AllProducts";
 import Footer from "../Components/Footer";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProd } from "../Api/AllProdApi";
 
 const AllProd = () => {
   const genders = ["Men", "Women", "Unisex"];
@@ -11,15 +12,14 @@ const AllProd = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedContent, setSelectedContent] = useState("all");
 
-  const [allProdData, setALLProdData] = useState([]);
+  const { error, isPending, data } = useQuery({
+    queryKey: ["All-Products"],
+    queryFn: getAllProd,
+  });
 
-  useEffect(() => {
-    const url = "http://localhost:4000/api/v1/all-products";
+  if (isPending) return "Loading...";
 
-    axios.get(`${url}`).then((res) => {
-      setALLProdData(res.data);
-    });
-  }, []);
+  if (error) return "An error has occured: " + error.message;
 
   const handleGenderChange = (gender) => {
     setSelectedGender(gender === selectedGender ? null : gender);
@@ -43,20 +43,18 @@ const AllProd = () => {
   //! Render gender or brand content based on selected content
   const renderContent = () => {
     if (selectedContent === "all") {
-      return <AllProducts data={allProdData} />; //! Render all products initially
+      return <AllProducts data={data} />; //! Render all products initially
     }
 
     if (selectedContent === "gender") {
-      const filteredData = allProdData.filter(
+      const filteredData = data.filter(
         (prod) => prod.gender === selectedGender
       );
       return <GenderProd data={filteredData} />;
     }
 
     if (selectedContent === "brand") {
-      const filteredData = allProdData.filter(
-        (prod) => prod.brand === selectedBrand
-      );
+      const filteredData = data.filter((prod) => prod.brand === selectedBrand);
       return (
         <div>
           <BrandProd data={filteredData} />
@@ -67,12 +65,15 @@ const AllProd = () => {
 
   //! Render brand buttons
   const renderBrandBtn = () => {
-    const brands = [...new Set(allProdData.map((prod) => prod.brand))];
+    const brands = [...new Set(data.map((prod) => prod.brand))];
 
     return (
       <div className="mt-10">
         <h1 className="font-fontbody text-lg">Brand</h1>
-        <div className="flex flex-col ml-4 mt-2 space-y-2">
+        <div
+          className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
+        scrollbar-track-header scrollbar-thumb-hovcolor max-h-52 overflow-y-auto mr-10 overflow-x-auto"
+        >
           {brands.map((brand, index) => (
             <div key={index}>
               <button

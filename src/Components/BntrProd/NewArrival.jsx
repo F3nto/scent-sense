@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -6,6 +5,8 @@ import {
   FavoriteBorderOutlined,
   ShoppingCart,
 } from "@mui/icons-material";
+import { useQuery } from "@tanstack/react-query";
+import { getNewArrivalProd } from "../../Api/NewArrivalApi";
 
 //! redux
 import { useDispatch, useSelector } from "react-redux";
@@ -13,29 +14,13 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
-import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide"; 
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const NewArrival = () => {
-  const [newArriProd, setNewArriProd] = useState([]);
-
   const dispatch = useDispatch();
 
   const wishList = useSelector((state) => state.wishList?.wishListArr);
   const cart = useSelector((state) => state.cart?.cartArr);
-
-
-  useEffect(() => {
-    let url = "http://localhost:4000/api/v1/new-arrival";
-
-    axios
-      .get(`${url}`)
-      .then((res) => {
-        setNewArriProd(res.data);
-      })
-      .catch((err) => {
-        console.log("error...", err);
-      });
-  }, []);
 
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "300px" : "230px";
@@ -83,16 +68,24 @@ const NewArrival = () => {
 
   const handleShoppingCart = (clickedItem) => {
     if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
-      dispatch(removeFromCart(clickedItem._id))
+      dispatch(removeFromCart(clickedItem._id));
     } else {
-      dispatch(addToCart(clickedItem))
+      dispatch(addToCart(clickedItem));
     }
-  }
+  };
+
+  const { error, isPending, data } = useQuery({
+    queryKey: ["new-arrival"],
+    queryFn: getNewArrivalProd,
+  });
+
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <div className="mt-12">
-      <div className="flex flex-wrap justify-between items-center"> 
-        {newArriProd.map((item, index) => (
+      <div className="flex flex-wrap justify-between items-center">
+        {data.map((item, index) => (
           <div
             key={index}
             className="border border-slate-400 rounded-tr-md rounded-tl-md my-2"
@@ -132,9 +125,10 @@ const NewArrival = () => {
                     )}
                   </button>
                   <button
-                  onClick={() => handleShoppingCart(item)}
-                  className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full">
-                     {cart.some((cartItem) => cartItem._id === item._id) ? (
+                    onClick={() => handleShoppingCart(item)}
+                    className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transition-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full"
+                  >
+                    {cart.some((cartItem) => cartItem._id === item._id) ? (
                       <div className="text-[#9a4528]">
                         <ShoppingCart />
                       </div>

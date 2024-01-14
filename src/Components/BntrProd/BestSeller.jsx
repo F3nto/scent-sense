@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
   FavoriteBorderOutlined,
   ShoppingCart,
 } from "@mui/icons-material";
+import { useQuery } from "@tanstack/react-query";
+import { getBestSellerProd } from "../../Api/BestSellerApi";
 //! redux
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,32 +16,22 @@ import {
 import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const BestSeller = () => {
-  const [bestSellerProd, setBestSellerProd] = useState([]);
-
   const dispatch = useDispatch();
 
   const wishList = useSelector((state) => state.wishList?.wishListArr);
   const cart = useSelector((state) => state.cart?.cartArr);
 
-  useEffect(() => {
-    const url = "http://localhost:4000/api/v1/bestseller";
-
-    axios
-      .get(`${url}`)
-      .then((res) => {
-        setBestSellerProd(res.data);
-      })
-      .catch((err) => {
-        console.log("error...", err);
-      });
-  }, []);
-
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "300px" : "230px";
   };
 
+  const getInitialWidth = () => {
+    return window.innerWidth <= 493 ? "200px" : "100%";
+  };
+
   const updateWindowDimensions = useCallback(() => {
     setBestProdHeight(getInitialHeight());
+    setBestProdWidth(getInitialWidth());
   }, []);
 
   useEffect(() => {
@@ -57,6 +48,7 @@ const BestSeller = () => {
   }, [updateWindowDimensions]);
 
   const [bestProdHeight, setBestProdHeight] = useState(getInitialHeight());
+  const [bestProdWidth, setBestProdWidth] = useState(getInitialWidth());
 
   const navigate = useNavigate();
   const handleClickView = (item) => {
@@ -87,10 +79,18 @@ const BestSeller = () => {
     }
   };
 
+  const { error, isPending, data } = useQuery({
+    queryKey: ["best-seller"],
+    queryFn: getBestSellerProd,
+  });
+
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-between items-center">
-        {bestSellerProd.map((item, index) => (
+        {data.map((item, index) => (
           <div
             key={index}
             className="border border-slate-400 rounded-tr-md rounded-tl-md my-2"
@@ -99,7 +99,7 @@ const BestSeller = () => {
               <img
                 src={`${item.type[0].img}`}
                 className="object-cover z-10 group-hover:scale-105 transition-transform duration-500 ease-linear"
-                style={{ width: "100%", height: bestProdHeight }}
+                style={{ width: bestProdWidth, height: bestProdHeight }}
                 alt=""
               />
               <div className="w-52 h-52 rounded-full bg-[#ffffff] absolute"></div>
