@@ -18,7 +18,7 @@ const TreasureBrandProd = ({ data }) => {
   const wishList = useSelector((state) => state.wishList?.wishListArr);
 
   const getInitialHeight = () => {
-    return window.innerWidth >= 768 ? "300px" : "230px";
+    return window.innerWidth >= 768 ? "250px" : "230px";
   };
 
   const updateWindowDimensions = useCallback(() => {

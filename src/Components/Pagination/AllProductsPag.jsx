@@ -7,11 +7,34 @@ const AllProductsPag = ({
   currentPage,
   currentPost,
 }) => {
-  const pageNum = [];
+  const pageNum = Math.ceil(totalLength / itemPerPage);
 
-  for (let i = 1; i <= Math.ceil(totalLength / itemPerPage); i++) {
-    pageNum.push(i);
-  }
+  const renderPaginationNumbers = () => {
+    const delta = 2; 
+    const showEllipsis = delta * 2 + 1 < pageNum;
+
+    const pages = [];
+
+    for (let i = 1; i <= pageNum; i++) {
+      if (
+        i === 1 ||
+        i === pageNum ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        pages.push(
+          <CustomPaginationNum
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            active={i === currentPage}
+            pageNum={i}
+          />
+        );
+      } else if (showEllipsis && pages[pages.length - 1] !== "...")
+        pages.push("...");
+    }
+
+    return pages;
+  };
 
   const CustomPaginationNum = ({ onClick, pageNum, active }) => {
     return (
@@ -27,16 +50,7 @@ const AllProductsPag = ({
 
   return (
     <div className="flex justify-center items-center space-x-2 mt-8">
-      {pageNum.map((num) => (
-        currentPost.length !== totalLength && (
-          <CustomPaginationNum
-            key={num}
-            onClick={() => setCurrentPage(num)}
-            active={num === currentPage}
-            pageNum={num}
-          />
-        )
-      ))}
+      {renderPaginationNumbers()}
     </div>
   );
 };

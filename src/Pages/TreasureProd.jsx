@@ -70,7 +70,7 @@ const TreasureProd = () => {
     const brands = [...new Set(data.map((prod) => prod.brand))];
 
     return (
-      <div className="mt-10">
+      <div className="mt-10 w-56">
         <h1 className="font-fontbody text-lg">Brand</h1>
         <div className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
         scrollbar-track-header scrollbar-thumb-hovcolor max-h-52 overflow-y-auto mr-10 overflow-x-auto"
@@ -98,8 +98,23 @@ const TreasureProd = () => {
 
   return (
     <>
+      <div className="w-full mb-6 relative">
+        <img
+          src={require("../Assets/images/perfume-set.jpg")}
+          className="kenburns-animation object-cover"
+          style={{ width: "100%", height: "400px" }}
+          alt=""
+        />
+        <div className="absolute inset-0 text-center top-1/2">
+          <div className="animation-custom-allproduct">
+          <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
+            Embrace Elegance with our Signature Perfume Set
+          </text>
+          </div>
+        </div>
+      </div>
       <div className="mt-10 flex">
-        <div className="w-1/6 ml-6">
+        <div className="max-w-60 ml-6">
           <div className="">
             <div>
               <button

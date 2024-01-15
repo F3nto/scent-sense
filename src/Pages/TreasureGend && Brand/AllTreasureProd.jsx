@@ -13,6 +13,7 @@ import {
   removeWishList,
 } from "../../Redux/features/wishListSlide";
 import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
+import AllTreasurePag from "../../Components/Pagination/AllTreasurePag";
 
 const AllProducts = ({ data }) => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const AllProducts = ({ data }) => {
 
   const updateWindowDimensions = useCallback(() => {
     setProdHeight(getInitialHeight());
+    setItemPerPage(getInitialItemPerPage());
   }, []);
 
   useEffect(() => {
@@ -40,6 +42,20 @@ const AllProducts = ({ data }) => {
   }, [updateWindowDimensions]);
 
   const [prodHeight, setProdHeight] = useState(getInitialHeight());
+
+  const getInitialItemPerPage = () => {
+
+    return 12
+
+  }
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemPerPage, setItemPerPage] = useState(getInitialItemPerPage());
+  const lastItemIndex = currentPage * itemPerPage;
+  const firstItemIndex = lastItemIndex - itemPerPage;
+
+  const currentPosts = data.slice(firstItemIndex, lastItemIndex);
+
+
 
   const navigate = useNavigate();
 
@@ -72,10 +88,13 @@ const AllProducts = ({ data }) => {
     }
   };
 
+
+  
+
   return (
     <div className="">
-      <div className="grid grid-cols-4">
-        {data.map((item, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {currentPosts.map((item, index) => (
           <div key={index} className="px-2">
             <div className="border border-slate-400 rounded-tr-md rounded-tl-md my-2">
               <div className="relative overflow-hidden flex justify-center items-center rounded-tr-md rounded-tl-md bg-slate-200 group">
@@ -143,6 +162,13 @@ const AllProducts = ({ data }) => {
           </div>
         ))}
       </div>
+      <AllTreasurePag
+       totalLength = {data.length}
+       itemPerPage = {itemPerPage}
+       setCurrentPage = {setCurrentPage}
+       currentPage = {currentPage}
+       currentPost = {currentPosts}
+      />
     </div>
   );
 };

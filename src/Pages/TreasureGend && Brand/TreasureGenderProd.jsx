@@ -18,7 +18,7 @@ const TreasureGenderProd = ({ data }) => {
 
 
   const getInitialHeight = () => {
-    return window.innerWidth >= 768 ? "300px" : "230px";
+    return window.innerWidth >= 768 ? "250px" : "230px";
   };
 
   const updateWindowDimensions = useCallback(() => {

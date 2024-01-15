@@ -72,3 +72,36 @@ body {
 .transition-custom:hover {
   transform: translateX(0);
 }
+
+
+
+
+.animation-custom-allproduct {
+
+  animation: custom-fade 4s infinite;
+
+} 
+
+
+
+@keyframes custom-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.transition-custom {
+  transform: translateX(-20px);
+  transition: transform 4s;
+}
+
+.transition-custom:hover {
+  transform: translateX(0);
+}

@@ -1,18 +1,19 @@
 import React from "react";
 
-const DealProdPag = ({
+const AllTreasurePag = ({
   totalLength,
   itemPerPage,
   setCurrentPage,
   currentPage,
+  currentPost,
 }) => {
   const pageNum = Math.ceil(totalLength / itemPerPage);
 
-  const renderPaginationShapes = () => {
-    const delta = 2; 
+  const renderPaginationNumbers = () => {
+    const delta = 2;
     const showEllipsis = delta * 2 + 1 < pageNum;
 
-    const shapes = [];
+    const pages = [];
 
     for (let i = 1; i <= pageNum; i++) {
       if (
@@ -20,36 +21,38 @@ const DealProdPag = ({
         i === pageNum ||
         (i >= currentPage - delta && i <= currentPage + delta)
       ) {
-        shapes.push(
-          <CustomPaginationShape
+        pages.push(
+          <CustomPaginationNum
             key={i}
             onClick={() => setCurrentPage(i)}
             active={i === currentPage}
+            pageNum={i}
           />
         );
-      } else if (showEllipsis && shapes[shapes.length - 1] !== "...")
-        shapes.push("...");
+      } else if (showEllipsis && pages[pages.length - 1] !== "...")
+        pages.push("...");
     }
 
-    return shapes;
+    return pages;
   };
 
-  const CustomPaginationShape = ({ onClick, active }) => {
+  const CustomPaginationNum = ({ onClick, pageNum, active }) => {
     return (
-      <div
-        className={`w-4 h-4 rounded-full cursor-pointer ${
-          active ? "bg-header" : "bg-gray-400"
-        }`}
+      <button
+        className={`text-center w-8 h-8 hover:bg-header rounded-md cursor-pointer
+        ${active ? "bg-header text-white" : "bg-gray-100"}`}
         onClick={onClick}
-      ></div>
+      >
+        {pageNum}
+      </button>
     );
   };
 
   return (
     <div className="flex justify-center items-center space-x-2 mt-8">
-      {renderPaginationShapes()}
+      {renderPaginationNumbers()}
     </div>
   );
 };
 
-export default DealProdPag;
+export default AllTreasurePag;

@@ -68,7 +68,7 @@ const AllProd = () => {
     const brands = [...new Set(data.map((prod) => prod.brand))];
 
     return (
-      <div className="mt-10">
+      <div className="mt-10 w-56">
         <h1 className="font-fontbody text-lg">Brand</h1>
         <div
           className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
@@ -78,7 +78,7 @@ const AllProd = () => {
             <div key={index}>
               <button
                 onClick={() => handleBrandChange(brand)}
-                className={`relative transition-all duration-100 hover:text-comTxt ease-in group ${
+                className={`relative flex justify-start transition-all duration-100 hover:text-comTxt ease-in group ${
                   selectedBrand === brand ? "text-comTxt" : "text-slate-700"
                 }`}
               >
@@ -97,8 +97,23 @@ const AllProd = () => {
 
   return (
     <>
+      <div className="w-full mb-6 relative">
+        <img
+          src={require("../Assets/images/all-prod.jpg")}
+          className="kenburns-animation object-cover opacity-80"
+          style={{ width: "100%", height: "400px" }}
+          alt=""
+        />
+        <div className="absolute inset-0 text-center top-1/2">
+          <div className="animation-custom-allproduct">
+          <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
+            Captivating Auras, Bottled in Beauty
+          </text>
+          </div>
+        </div>
+      </div>
       <div className="mt-10 flex">
-        <div className="w-1/6 ml-6">
+        <div className="ml-6 max-w-60">
           <div className="">
             <div>
               <button
