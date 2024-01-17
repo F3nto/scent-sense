@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Header from "../Components/Header";
 import TitleBar from "../Components/TitleBar";
 import Slider from "../Components/Slider";
@@ -14,7 +14,11 @@ const Home = () => {
   const handleTitleClick = (title) => {
     switch (title) {
       case "Blogs":
-        blogRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        blogRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest",
+        });
         break;
 
       default:
@@ -24,7 +28,7 @@ const Home = () => {
 
   return (
     <>
-      <Header />
+      <Header setIsSearchFocused={setIsSearchFocused} />
       <TitleBar onTitleClick={handleTitleClick} />
       <Slider />
       <DealProd />
