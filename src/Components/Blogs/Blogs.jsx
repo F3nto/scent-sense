@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BlogPag from "../Pagination/BlogPag";
 
-const Blogs = () => {
+const Blogs = ({isSearchFocused}) => {
   const [blogData, setBlogData] = useState([]);
   const navigate = useNavigate();
 
@@ -80,7 +80,7 @@ const Blogs = () => {
   };  
 
   return (
-    <div className="mx-2 md:sm:mx-12 mt-12">
+    <div className={`mx-2 md:sm:mx-12 mt-12 ${isSearchFocused && "-z-10 relative"}`}>
       <h1 className="relative flex justify-center items-center font-fontbody text-2xl font-semibold text-center">
         Blogs
         <div className="h-1 w-16 bg-header absolute top-9" />

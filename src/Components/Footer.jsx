@@ -5,9 +5,9 @@ import {
   Twitter,
   CopyrightTwoTone,
 } from "@mui/icons-material";
-const Footer = () => {
+const Footer = ({isSearchFocused}) => {
   return (
-    <footer className=" mt-10 border-t-header border shadow-header shadow-inner">
+    <footer className={`mt-10 border-t-header border shadow-header shadow-inner ${isSearchFocused && "-z-10 relative"}`}>
       <div className="md:sm:mx-14 flex-none sm:md:flex justify-between">
         <div className="mt-4">
           <div className="flex sm:md:flex-col justify-center items-center">

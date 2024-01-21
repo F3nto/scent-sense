@@ -3,7 +3,7 @@ import BestSeller from "./BntrProd/BestSeller";
 import NewArrival from "./BntrProd/NewArrival";
 import TopRated from "./BntrProd/TopRated";
 
-const BntrProd = () => {
+const BntrProd = ({isSearchFocused}) => {
   const [activeTab, setActiveTab] = useState("bestSeller");
 
   const handleClickTab = (tab) => {
@@ -27,7 +27,7 @@ const BntrProd = () => {
   };
 
   return (
-    <div className="mx-2 md:sm:mx-12 mt-12">
+    <div className={`mx-2 md:sm:mx-12 mt-12 ${isSearchFocused && "-z-10 relative"}`}>
       <div className="flex items-center justify-center space-x-8">
         <button
           onClick={() => handleClickTab("bestSeller")}

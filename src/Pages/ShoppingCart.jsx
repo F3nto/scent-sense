@@ -122,44 +122,58 @@ const ShoppingCart = () => {
   return (
     <div className="container mx-auto mt-12">
       <div className="text-center mt-12">
-        <h1 className="relative inline-block text-3xl font-bold">
+        <h1 className="relative flex justify-center items-center text-3xl font-bold">
           Shopping Cart
-          <div className="h-1 w-20 bg-header absolute top-9" />
+          <div className="h-1 w-28 flex bg-header absolute top-9" />
         </h1>
       </div>
+      {cart.length > 0 ? (
+        <div className="flex justify-center items-center mt-10">
+          <div
+            style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
+          >
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              checkboxSelection={false}
+              disableSelectionOnClick
+            />
+          </div>
 
-      <div className="flex justify-center items-center mt-10">
-        <div
-          style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
-        >
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            checkboxSelection={false}
-            disableSelectionOnClick
-          />
+          <div className="flex-1 bg-orange-600 p-6 text-white">
+            <div className="text-xl font-bold mb-4">Order Summary</div>
+            <div className="flex justify-between">
+              <span>Subtotal:</span>
+              <span>$subtotal</span>
+            </div>
+            <div className="flex justify-between mt-2">
+              <span>Shipping:</span>
+              <span>$shipping</span>
+            </div>
+            <div className="flex justify-between mt-2">
+              <span>Total:</span>
+              <span>$total</span>
+            </div>
+            <button className="mt-4 bg-white text-orange-600 py-2 px-4 rounded-full">
+              Checkout
+            </button>
+          </div>
         </div>
-
-        <div className="flex-1 bg-orange-600 p-6 text-white">
-          <div className="text-xl font-bold mb-4">Order Summary</div>
-          <div className="flex justify-between">
-            <span>Subtotal:</span>
-            <span>$subtotal</span>
+      ) : (
+        <div className="flex flex-col justify-center items-center mt-40">
+          <div className=""> 
+            <text className="font-fontbody text-3xl text-comTxt">No Cart Item !!!</text>
           </div>
-          <div className="flex justify-between mt-2">
-            <span>Shipping:</span>
-            <span>$shipping</span>
+          <div className="">
+            <img
+              src={require("../Assets/images/logo-black.png")}
+              className="object-cover w-80"
+              alt=""
+            />
           </div>
-          <div className="flex justify-between mt-2">
-            <span>Total:</span>
-            <span>$total</span>
-          </div>
-          <button className="mt-4 bg-white text-orange-600 py-2 px-4 rounded-full">
-            Checkout
-          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 };

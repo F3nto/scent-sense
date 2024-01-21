@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Slider = () => {
+const Slider = ({isSearchFocused}) => {
   let phts = [
     { img: require("../Assets/images/per1-3.jpg") },
     { img: require("../Assets/images/per1-4.jpg") },
@@ -53,7 +53,7 @@ const Slider = () => {
   }
 
   return (
-    <div className="mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex">
+    <div className={`mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex ${isSearchFocused && "-z-10 relative"}`}>
       <div className=" bg-slate-600 relative overflow-hidden w-full md:sm:w-2/3">
         <img
           src={phts[slideIndex].img}

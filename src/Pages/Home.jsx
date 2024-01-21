@@ -10,6 +10,7 @@ import Footer from "../Components/Footer";
 
 const Home = () => {
   const blogRef = useRef(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const handleTitleClick = (title) => {
     switch (title) {
@@ -26,20 +27,30 @@ const Home = () => {
     }
   };
 
+  const handleSearchFocus = (focusedState) => {
+    setIsSearchFocused(focusedState);
+  };
   return (
-    <>
-      <Header setIsSearchFocused={setIsSearchFocused} />
-      <TitleBar onTitleClick={handleTitleClick} />
-      <Slider />
-      <DealProd />
-      {/* <PromoSession /> */}
-      <BntrProd />
+    <main
+      className={`overlay ${
+        isSearchFocused
+          ? "bg-[rgba(0,0,0,0.3)] transition-all duration-500 ease-in"
+          : ""
+      }`}
+    >
+      <Header onSearchFocus={handleSearchFocus} />
+      <TitleBar
+        onTitleClick={handleTitleClick}
+        isSearchFocused={isSearchFocused}
+      />
+      <Slider isSearchFocused={isSearchFocused} />
+      <DealProd isSearchFocused={isSearchFocused} />
+      <BntrProd isSearchFocused={isSearchFocused} />
       <div ref={blogRef}>
-        <Blogs />
+        <Blogs isSearchFocused={isSearchFocused} />
       </div>
-
-      <Footer />
-    </>
+      <Footer isSearchFocused={isSearchFocused} />
+    </main>
   );
 };
 

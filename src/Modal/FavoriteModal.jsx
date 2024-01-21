@@ -75,7 +75,7 @@ const FavoriteModal = ({ onClose }) => {
         ) : (
           <div className="flex flex-col justify-center items-center mt-40">
             <div className="">
-              <text className="font-fontbody">No WishList Item !!!</text>
+              <text className="font-fontbody text-comTxt text-xl">No WishList Item !!!</text>
             </div>
             <div className="">
               <img
