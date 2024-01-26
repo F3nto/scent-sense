@@ -7,18 +7,18 @@ const AllProductsPag = ({
   currentPage,
   currentPost,
 }) => {
-  const pageNum = Math.ceil(totalLength / itemPerPage);
+  const pageNum = Math.ceil(totalLength / itemPerPage); //! 3
 
   const renderPaginationNumbers = () => {
     const delta = 2; 
-    const showEllipsis = delta * 2 + 1 < pageNum;
+    const showEllipsis = delta * 2 + 1 < pageNum;   //! 5 < 3 // no need to show ellipsis
 
     const pages = [];
 
     for (let i = 1; i <= pageNum; i++) {
       if (
-        i === 1 ||
-        i === pageNum ||
+        i === 1 ||                                                            
+        i === pageNum ||                                            //! i === 3
         (i >= currentPage - delta && i <= currentPage + delta)
       ) {
         pages.push(

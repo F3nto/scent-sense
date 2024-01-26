@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  searchArr: [],
+  searchArrForAllProduct: [],
+  searchArrForTreasureProduct : [],
+  
 };
 
 export const searchSliceReducer = createSlice({
@@ -9,13 +11,18 @@ export const searchSliceReducer = createSlice({
   initialState,
   reducers: {
     addToSearch: (state, action) => {
-      state.searchArr.push(...action.payload);
+      state.searchArrForAllProduct.push(...action.payload);
+      state.searchArrForTreasureProduct.push(...action.payload);
     },
 
     removeSearch: (state, action) => {
-      state.searchArr = state.searchArr.filter(
+      state.searchArrForAllProduct = state.searchArrForAllProduct.filter(
         (search) => search._id !== action.payload
       );
+
+      state.searchArrForTreasureProduct = state.searchArrForTreasureProduct.filter(
+        (search) => search._id !== action.payload
+      )
     },
   },
 });

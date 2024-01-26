@@ -63,6 +63,15 @@ const AllProd = () => {
     }
   };
 
+  const getCountForGender = (gender) => {
+    if (data) {
+      const filteredData = data.filter((prod) => prod.gender === gender);
+      return filteredData.length;
+    }
+
+    return 0;
+  };
+
   //! Render brand buttons
   const renderBrandBtn = () => {
     const brands = [...new Set(data.map((prod) => prod.brand))];
@@ -106,9 +115,9 @@ const AllProd = () => {
         />
         <div className="absolute inset-0 text-center top-1/2">
           <div className="animation-custom-allproduct">
-          <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
-            Captivating Auras, Bottled in Beauty
-          </text>
+            <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
+              Captivating Auras, Bottled in Beauty
+            </text>
           </div>
         </div>
       </div>
@@ -141,7 +150,9 @@ const AllProd = () => {
                         : "text-slate-500"
                     }`}
                   >
-                    <span className="font-fontbody">{gender}</span>
+                    <span className="font-fontbody">
+                      {gender} ({getCountForGender(gender)})
+                    </span>
                     <span
                       className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
                   ${selectedGender === gender ? "scale-x-100 bg-comTxt" : ""}`}

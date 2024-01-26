@@ -34,7 +34,7 @@ const Home = () => {
     <main
       className={`overlay ${
         isSearchFocused
-          ? "bg-[rgba(0,0,0,0.3)] transition-all duration-500 ease-in"
+          ? "bg-[rgba(0,0,0,0.2)] transition-all duration-700 ease-in"
           : ""
       }`}
     >

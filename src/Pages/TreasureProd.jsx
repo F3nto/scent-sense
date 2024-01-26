@@ -17,7 +17,7 @@ const TreasureProd = () => {
     queryFn : getTreasureProd
     
   })
-
+  
   if(isPending) return "Loading...";
   if(error) return "An error has occured: " + error.message;
 
@@ -64,6 +64,17 @@ const TreasureProd = () => {
       );
     }
   };
+
+  const getCountForGender = (gender) => {
+    if(data) {
+      const filteredData = data.filter((prod) => prod.gender === gender)
+      return filteredData.length;
+
+    }
+
+    return 0;
+
+  }
 
   // Render brand buttons
   const renderBrandBtn = () => {
@@ -142,7 +153,7 @@ const TreasureProd = () => {
                         : "text-slate-500"
                     }`}
                   >
-                    <span className="font-fontbody">{gender}</span>
+                    <span className="font-fontbody">{gender} ({getCountForGender(gender)})</span>
                     <span
                       className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
                   ${selectedGender === gender ? "scale-x-100 bg-comTxt" : ""}`}

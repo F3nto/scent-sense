@@ -18,24 +18,21 @@ const Header = ({ onSearchFocus }) => {
 
   const wishListQty = useSelector((state) => state.wishList?.wishListArr);
   const cartQty = useSelector((state) => state.cart?.cartArr);
-  const searchData = useSelector((state) => state.search.searchArr);
+  const searchForAllProdData = useSelector(
+    (state) => state.search.searchArrForAllProduct
+  );
+  const searchForTreasureProdData = useSelector(
+    (state) => state.search.searchArrForTreasureProduct
+  );
 
   const dispatch = useDispatch();
 
-  const openAuthModal = () => {
-    setIsAuthModalOpen(true);
-  };
-
-  const openFavModal = () => {
-    setIsFavModalOpen(true);
-  };
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const openFavModal = () => setIsFavModalOpen(true);
+  const closeDrawer = () => setIsClickMenu(false);
 
   const handleClickMenu = () => {
     setIsClickMenu((prev) => !prev);
-  };
-
-  const closeDrawer = () => {
-    setIsClickMenu(false);
   };
 
   useEffect(() => {
@@ -59,24 +56,46 @@ const Header = ({ onSearchFocus }) => {
     navigate(url);
   };
 
-  const allSearchData = useMemo(() => [...searchData], [searchData]);
+  const allSearchData = useMemo(
+    () => [...searchForAllProdData, ...searchForTreasureProdData],
+    [searchForAllProdData, searchForTreasureProdData]
+  );
   console.log("all search data", allSearchData);
 
   useEffect(() => {
-    const url = "http://localhost:4000/api/v1/all-products";
+    const url1 = "http://localhost:4000/api/v1/all-products";
+    const url2 = "http://localhost:4000/api/v1/treasure-products";
 
-    axios
-      .get(url)
-      .then((res) => {
-        const uniqueProducts = Array.from(
-          new Set(res.data.map((product) => product._id))
-        ).map((id) => res.data.find((product) => product._id === id));
+    const fetchData = async () => {
+      const response1Promise = axios.get(url1);
+      const response2Promise = axios.get(url2);
 
-        dispatch(addToSearch(uniqueProducts));
-      })
-      .catch((err) => {
-        console.err(err);
-      });
+      response1Promise
+        .then((response1) => {
+          const uniqueProducts1 = Array.from(
+            new Set(response1.data.map((product) => product._id))
+          ).map((id) => response1.data.find((product) => product._id === id));
+          dispatch(addToSearch(uniqueProducts1));
+        })
+        .catch((error) => {
+          console.error("Error fetching data from URL 1:", error);
+          return [];
+        });
+
+      response2Promise
+        .then((response2) => {
+          const uniqueProducts2 = Array.from(
+            new Set(response2.data.map((product) => product._id))
+          ).map((id) => response2.data.find((product) => product._id === id));
+          dispatch(addToSearch(uniqueProducts2));
+        })
+        .catch((error) => {
+          console.error("Error fetching data from URL 2:", error);
+          return [];
+        });
+    };
+
+    fetchData();
   }, [dispatch]);
 
   const searchSuggest = useMemo(() => {
@@ -142,7 +161,7 @@ const Header = ({ onSearchFocus }) => {
     }
   };
   const handleSearchIconClick = () => {
-    if (searchTxt.trim() !== '') {
+    if (searchTxt.trim() !== "") {
       if (selectedSuggestion !== -1) {
         handleSuggestionToDetail(searchSuggest[selectedSuggestion]);
       } else if (searchSuggest.length > 0) {
@@ -151,17 +170,31 @@ const Header = ({ onSearchFocus }) => {
     }
   };
 
-
   const handleSuggestionToDetail = (item) => {
-    const queryParams = {
-      _id : item._id,
-      name : item.name
+    if (item.type === "TreasureProd") {
+      const queryParams = {
+        _id: item._id,
+        name: item.name,
+        type: item.type,
+      };
+
+      const url = `/treasure-product-detail?${new URLSearchParams(
+        queryParams
+      ).toString()}`;
+      navigate(url, { state: { item } });
+    } else {
+      const queryParams = {
+        _id: item._id,
+        name: item.name,
+        type: item.type,
+      };
+
+      const url = `/product-detail?${new URLSearchParams(
+        queryParams
+      ).toString()}`;
+      navigate(url, { state: { item } });
     }
-
-    const url = `/product-detail?${new URLSearchParams(queryParams).toString()}`
-    navigate(url, {state : {item}})
-  }
-
+  };
 
   return (
     <>
@@ -219,9 +252,10 @@ const Header = ({ onSearchFocus }) => {
             </button>
           )}
 
-          <button 
-          onClick={() => handleSearchIconClick()}
-          className="absolute right-0 bg-header py-2 px-5 rounded-tr-xl rounded-br-xl transform transition-transform hover:scale-105">
+          <button
+            onClick={() => handleSearchIconClick()}
+            className="absolute right-0 bg-header py-2 px-5 rounded-tr-xl rounded-br-xl transform transition-transform hover:scale-105"
+          >
             <img
               className="w-6 h-6 "
               src={require("../Assets/icons/search.png")}
