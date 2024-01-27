@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TreasureGenderProd from "./TreasureGend && Brand/TreasureGenderProd";
 import TreasureBrandProd from "./TreasureGend && Brand/TreasureBrandProd";
 import AllTreasureProd from "./TreasureGend && Brand/AllTreasureProd";
 import Footer from "../Components/Footer";
-import {getTreasureProd} from "../Api/TreasureProdApi"
+import { getTreasureProd } from "../Api/TreasureProdApi";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 const TreasureProd = () => {
   const genders = ["Men", "Women", "Unisex"];
@@ -12,14 +13,25 @@ const TreasureProd = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedContent, setSelectedContent] = useState("all");
 
-  const {error, isPending, data} = useQuery({
-    queryKey : ["Treasure-products"],
-    queryFn : getTreasureProd
-    
-  })
-  
-  if(isPending) return "Loading...";
-  if(error) return "An error has occured: " + error.message;
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const selectedGenderFromQuery = queryParams.get("gender");
+
+  useEffect(() => {
+    if (selectedGenderFromQuery) {
+      setSelectedGender(selectedGenderFromQuery);
+      setSelectedContent("gender");
+    }
+  }, [selectedGenderFromQuery]);
+
+  const { error, isPending, data } = useQuery({
+    queryKey: ["Treasure-products"],
+    queryFn: getTreasureProd,
+  });
+
+  if (isPending) return "Loading...";
+  if (error) return "An error has occured: " + error.message;
 
   const handleGenderChange = (gender) => {
     setSelectedGender(gender === selectedGender ? null : gender);
@@ -35,10 +47,10 @@ const TreasureProd = () => {
   };
 
   const handleAllProdChange = () => {
-    setSelectedContent("all")
-    setSelectedBrand(null)
-    setSelectedGender(null)
-  }
+    setSelectedContent("all");
+    setSelectedBrand(null);
+    setSelectedGender(null);
+  };
 
   //! Render gender or brand content based on selected content
   const renderContent = () => {
@@ -54,9 +66,7 @@ const TreasureProd = () => {
     }
 
     if (selectedContent === "brand") {
-      const filteredData = data.filter(
-        (prod) => prod.brand === selectedBrand
-      );
+      const filteredData = data.filter((prod) => prod.brand === selectedBrand);
       return (
         <div>
           <TreasureBrandProd data={filteredData} />
@@ -66,15 +76,13 @@ const TreasureProd = () => {
   };
 
   const getCountForGender = (gender) => {
-    if(data) {
-      const filteredData = data.filter((prod) => prod.gender === gender)
+    if (data) {
+      const filteredData = data.filter((prod) => prod.gender === gender);
       return filteredData.length;
-
     }
 
     return 0;
-
-  }
+  };
 
   // Render brand buttons
   const renderBrandBtn = () => {
@@ -83,7 +91,8 @@ const TreasureProd = () => {
     return (
       <div className="mt-10 w-56">
         <h1 className="font-fontbody text-lg">Brand</h1>
-        <div className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
+        <div
+          className="flex border border-x-comTxt shadow-comTxt shadow-sm p-3 flex-col mt-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded 
         scrollbar-track-header scrollbar-thumb-hovcolor max-h-52 overflow-y-auto mr-10 overflow-x-auto"
         >
           {brands.map((brand, index) => (
@@ -118,9 +127,9 @@ const TreasureProd = () => {
         />
         <div className="absolute inset-0 text-center top-1/2">
           <div className="animation-custom-allproduct">
-          <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
-            Embrace Elegance with our Signature Perfume Set
-          </text>
+            <text className="text-[#ffffff] text-4xl font-bold font-fontbody">
+              Embrace Elegance with our Signature Perfume Set
+            </text>
           </div>
         </div>
       </div>
@@ -153,7 +162,9 @@ const TreasureProd = () => {
                         : "text-slate-500"
                     }`}
                   >
-                    <span className="font-fontbody">{gender} ({getCountForGender(gender)})</span>
+                    <span className="font-fontbody">
+                      {gender} ({getCountForGender(gender)})
+                    </span>
                     <span
                       className={`absolute inset-0 top-5 bg-comTxt transform scale-x-0 group-hover:scale-x-100 transition-transform duration-100 ease-in
                   ${selectedGender === gender ? "scale-x-100 bg-comTxt" : ""}`}

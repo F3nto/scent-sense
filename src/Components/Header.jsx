@@ -99,6 +99,7 @@ const Header = ({ onSearchFocus }) => {
   }, [dispatch]);
 
   const searchSuggest = useMemo(() => {
+ 
     const trimmedSearchTxt = searchTxt.trim().toLowerCase();
 
     if (trimmedSearchTxt === "") {
@@ -128,6 +129,7 @@ const Header = ({ onSearchFocus }) => {
 
       return [...startsWithSearch, ...containSearch];
     }
+   
   }, [searchTxt, allSearchData]);
 
   const handleAutoComplete = (event) => {
@@ -195,6 +197,7 @@ const Header = ({ onSearchFocus }) => {
       navigate(url, { state: { item } });
     }
   };
+  console.log("search suggest...", searchSuggest)
 
   return (
     <>
@@ -221,19 +224,38 @@ const Header = ({ onSearchFocus }) => {
           />
 
           {searchSuggest.length > 0 && (
+          
             <div className="absolute top-8 z-50 mt-2 w-80 bg-slate-200 border border-gray-600 shadow-lg">
-              {searchSuggest.map((suggestion, index) => (
+              {searchSuggest.map((suggestion, index) => {
+
+
+                const imgSrc = suggestion.type === "TreasureProd" ? suggestion.img : suggestion.type[0].img;
+
+                return(
+
                 <button
                   key={suggestion._id}
-                  className={`w-full px-4 py-2 text-left hover:text-white ${
+                  className={`w-full relative flex items-center px-4 py-2 text-left hover:text-white ${
                     index === selectedSuggestion ? "bg-hovcolor text-white" : ""
                   }`}
                   onMouseEnter={() => setSelectedSuggestion(index)}
                   onClick={() => handleSuggestionToDetail(suggestion)}
                 >
+                  <div>
                   {suggestion.name}
+                  </div>
+                  <div className="absolute right-1">
+                  <div className="w-8 h-8 relative flex justify-center items-center rounded-sm shadow-black shadow-sm bg-slate-300">
+                    <img
+                    src={imgSrc}
+                    alt=""
+                    className={`object-cover z-10 w-full h-full`}
+                    />
+                    <div className="w-6 h-6 rounded-full bg-[#ffffff] absolute" />
+                  </div>
+                  </div>
                 </button>
-              ))}
+              )})}
             </div>
           )}
 

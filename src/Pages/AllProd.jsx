@@ -1,16 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GenderProd from "./Gender && Brand /GenderProd";
 import BrandProd from "./Gender && Brand /BrandProd";
 import AllProducts from "./Gender && Brand /AllProducts";
 import Footer from "../Components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProd } from "../Api/AllProdApi";
+import { useLocation } from "react-router-dom";
 
 const AllProd = () => {
   const genders = ["Men", "Women", "Unisex"];
   const [selectedGender, setSelectedGender] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedContent, setSelectedContent] = useState("all");
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const selectedGenderFromQuery = queryParams.get("gender");
+
+  useEffect(() => {
+    if (selectedGenderFromQuery) {
+      setSelectedGender(selectedGenderFromQuery);
+      setSelectedContent("gender");
+    }
+  }, [selectedGenderFromQuery]);
 
   const { error, isPending, data } = useQuery({
     queryKey: ["All-Products"],
