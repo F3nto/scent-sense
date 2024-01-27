@@ -8,6 +8,7 @@ import {
   setInstock,
 } from "../Redux/features/qtyControlSlide";
 import { useDispatch, useSelector } from "react-redux";
+import Star from "../Components/Star/Star";
 // import { useMutation, useMutationState } from "@tanstack/react-query";
 // import axios from "axios";
 
@@ -18,6 +19,8 @@ const ProductDetail = () => {
   const {
     state: { item },
   } = location;
+
+
 
   const dispatch = useDispatch();
 
@@ -157,12 +160,22 @@ const ProductDetail = () => {
   };
 
   const renderProdDetail = () => {
+  console.log("starts",item);
+
     return (
       <div className="flex flex-1 flex-col ml-0 sm:-ml-8 space-y-6 items-center sm:items-start mt-6 sm:mt-0">
         <text className="font-fontbody text-2xl">{item.name}</text>
+        <div className="flex items-center">
+        <div className="w-32">
         <text className="font-fontbody text-comTxt text-xl tracking-wider">
           $ {item.type.find((prod) => prod.size === selectedSize).price}
         </text>
+        </div>
+        <div>
+          <Star stars={item.star} />
+        </div>
+        </div>
+
         <div className="h-1 w-36 bg-header"></div>
         {renderProdSize()}
         <div className="w-full">
