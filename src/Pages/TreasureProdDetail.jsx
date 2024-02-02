@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Add, Remove } from "@mui/icons-material";
+import Star from "../Components/Star/Star";
 
 const TreasureProdDetail = () => {
   const location = useLocation();
@@ -70,9 +71,16 @@ const TreasureProdDetail = () => {
 
         <div className="flex flex-1 flex-col -ml-8 space-y-6">
           <text className="font-fontbody text-2xl">{item.name}</text>
+          <div className="flex items-center">
+          <div className="w-32">
           <text className="font-fontbody text-comTxt text-xl tracking-wider">
             {item.price}
           </text>
+          </div>
+          <div>
+          <Star stars = {item.star} />
+          </div>
+          </div>
 
           <div className="h-1 w-36 bg-header"></div>
 

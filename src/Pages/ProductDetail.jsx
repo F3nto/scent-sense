@@ -9,6 +9,8 @@ import {
 } from "../Redux/features/qtyControlSlide";
 import { useDispatch, useSelector } from "react-redux";
 import Star from "../Components/Star/Star";
+import { toast, Toaster } from "react-hot-toast";
+import { addToCart } from "../Redux/features/addToCartSlide";
 // import { useMutation, useMutationState } from "@tanstack/react-query";
 // import axios from "axios";
 
@@ -20,11 +22,11 @@ const ProductDetail = () => {
     state: { item },
   } = location;
 
-
-
   const dispatch = useDispatch();
 
   const qty = useSelector((state) => state.qtyAndInstockController?.quantity);
+  const cart = useSelector((state) => state.cart?.cartArr);
+
   const instockFromRedux = useSelector(
     (state) => state.qtyAndInstockController?.instock
   );
@@ -122,6 +124,17 @@ const ProductDetail = () => {
   //   }
   // }, [item, selectedSize]);
 
+  const handleCart = (clickedItem) => {
+    const existingCartItem = cart.find((item) => item._id === clickedItem._id);
+
+    if (!existingCartItem) {
+      dispatch(addToCart(clickedItem));
+      toast.success("Added to Cart!!!");
+    } else {
+      toast.success("Item already in Cart!");
+    }
+  };
+
   const renderProdImages = () => {
     const selectedType = item.type.find((prod) => prod.size === selectedSize);
     return (
@@ -160,20 +173,18 @@ const ProductDetail = () => {
   };
 
   const renderProdDetail = () => {
-  console.log("starts",item);
-
     return (
       <div className="flex flex-1 flex-col ml-0 sm:-ml-8 space-y-6 items-center sm:items-start mt-6 sm:mt-0">
         <text className="font-fontbody text-2xl">{item.name}</text>
         <div className="flex items-center">
-        <div className="w-32">
-        <text className="font-fontbody text-comTxt text-xl tracking-wider">
-          $ {item.type.find((prod) => prod.size === selectedSize).price}
-        </text>
-        </div>
-        <div>
-          <Star stars={item.star} />
-        </div>
+          <div className="w-32">
+            <text className="font-fontbody text-comTxt text-xl tracking-wider">
+              $ {item.type.find((prod) => prod.size === selectedSize).price}
+            </text>
+          </div>
+          <div>
+            <Star stars={item.star} />
+          </div>
         </div>
 
         <div className="h-1 w-36 bg-header"></div>
@@ -204,8 +215,8 @@ const ProductDetail = () => {
         <div className="flex items-center text-comTxt">
           <span className="font-fontbody text-slate-700">In Stock: </span>
           {instockFromRedux.map((prod) => (
-                <span key={prod._id}>{prod.instock}</span>
-              ))}
+            <span key={prod._id}>{prod.instock}</span>
+          ))}
         </div>
 
         <div className="flex justify-center space-x-10">
@@ -230,7 +241,10 @@ const ProductDetail = () => {
             </button>
           </div>
           <div>
-            <button className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group">
+            <button
+              onClick={() => handleCart(item)}
+              className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group"
+            >
               <span className="font-fontbody group-hover:text-white">
                 Add To Cart
               </span>
@@ -242,12 +256,15 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="mx-2 sm:mx-12 mt-12">
-      <div className="flex flex-col sm:flex-row">
-        {renderProdImages()}
-        {renderProdDetail()}
+    <>
+      <div className="mx-2 sm:mx-12 mt-12">
+        <div className="flex flex-col sm:flex-row">
+          {renderProdImages()}
+          {renderProdDetail()}
+        </div>
       </div>
-    </div>
+      <Toaster position="top-center" reverseOrder={true} />
+    </>
   );
 };
 
