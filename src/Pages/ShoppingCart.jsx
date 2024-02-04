@@ -1,28 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
 import { Remove, Add } from "@mui/icons-material";
-import { decQty, incQty, setQty } from "../Redux/features/qtyControlSlide";
 
 const ShoppingCart = () => {
-  const cart = useSelector((state) => state.cart?.cartArr);
-  const qty = useSelector((state) => state.qtyAndInstockController?.quantity);
+  const cart = useSelector((state) => state?.cart?.cartArr);
+
+  // const cartQty = useSelector((state) => state.qty.quantity.quantity);
   console.log("cart Item...", cart);
   const dispatch = useDispatch();
 
-  const handleQtyChange = (event) => {
-    const value = parseInt(event.target.value, 10);
-    dispatch(setQty(isNaN(value) ? 1 : value));
-  };
+  // const [qty, setQty] = useState(cart[0]?.qty);
+  // const increaseQtyHandler = () => {
+  //   setQty( (prev) => prev + 1)
+  // };
 
-  const increaseQtyHandler = () => {
-    dispatch(incQty());
-  };
+  // const decreaseQtyHandler = () => {
+  //   if(qty > 1) {
+  //     setQty(qty - 1)
+  //   }
+  // };
 
-  const decreaseQtyHandler = () => {
-    dispatch(decQty());
-  };
+  // const handleQtyChange = (e) => {
+  //   const value = parseInt(e.target.value);
+  //   if (!isNaN(value) && value >= 1) {
+  //     setQty(value);
+  //   } else {
+  //     setQty(1);
+  //   }
+  // };
 
   //! columns
 
@@ -34,13 +41,10 @@ const ShoppingCart = () => {
       width: 100,
       renderCell: (params) => {
         const item = cart[params.row.id - 1];
-        const imgSrc =
-          item.type === "TreasureProd" ? item.img : item.type[0].img;
-
         return (
           <div className="w-12 h-12 relative flex justify-center items-center rounded-sm shadow-black shadow-sm bg-slate-300">
             <img
-              src={imgSrc}
+              src={item.img}
               alt=""
               className={`object-cover z-10 w-full h-full`}
             />
@@ -52,12 +56,29 @@ const ShoppingCart = () => {
     {
       field: "name",
       headerName: "Item",
-      width: 250,
+      width: 200,
       renderCell: (params) => {
-        const item = cart[params.row.id - 1];
+        const item = cart[params.row.id - 1]; // is happen item.type.
         return (
           <div className="flex items-center">
             <div className="">{item.name}</div>
+          </div>
+        );
+      },
+    },
+    {
+      field: "Bottle Size",
+      headerName: "Bottle Size",
+      width: 100,
+      renderCell: (params) => {
+        const item = cart[params.row.id - 1]; // is happen item.type.
+        return (
+          <div className="flex items-center">
+            {item.type === "TreasureProd" ? (
+              <div className="">set</div>
+            ) : (
+              <div className="">{item.size} ml</div>
+            )}
           </div>
         );
       },
@@ -68,10 +89,7 @@ const ShoppingCart = () => {
       width: 120,
       renderCell: (params) => {
         const item = cart[params.row.id - 1];
-        const prices =
-          item.type === "TreasureProd" ? item.price : item.type[0].price;
-
-        return <div>{prices}</div>;
+        return <div>{item.price}</div>;
       },
     },
     {
@@ -82,7 +100,7 @@ const ShoppingCart = () => {
         return (
           <div className="flex items-center justify-center space-x-4">
             <button
-              onClick={() => decreaseQtyHandler()}
+              // onClick={() => decreaseQtyHandler()}
               className="bg-header px-2 py-1.5 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Remove
@@ -92,12 +110,15 @@ const ShoppingCart = () => {
             </button>
             <input
               type="text"
-              value={qty}
-              onChange={handleQtyChange}
+              // value={cart?.qty}
+
+              // new line
+              value={params?.row?.quantity}
+              // onChange={handleQtyChange}
               className="border w-12 py-1 shadow-slate-300 shadow-inner text-center rounded-md focus:outline-none focus:bg-slate-100"
             />
             <button
-              onClick={() => increaseQtyHandler()}
+              // onClick={() => increaseQtyHandler()}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Add
@@ -114,9 +135,9 @@ const ShoppingCart = () => {
 
   //! Rows
 
-  const rows = cart.map((item, index) => ({
+  const rows = cart?.map((item, index) => ({
     id: index + 1,
-    quantity: qty,
+    quantity: item?.qty,
   }));
 
   return (
@@ -127,7 +148,7 @@ const ShoppingCart = () => {
           <div className="h-1 w-28 flex bg-header absolute top-9" />
         </h1>
       </div>
-      {cart.length > 0 ? (
+      {cart?.length > 0 ? (
         <div className="flex justify-center items-center mt-10">
           <div
             style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
@@ -162,8 +183,10 @@ const ShoppingCart = () => {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center mt-40">
-          <div className=""> 
-            <text className="font-fontbody text-3xl text-comTxt">No Cart Item !!!</text>
+          <div className="">
+            <text className="font-fontbody text-3xl text-comTxt">
+              No Cart Item !!!
+            </text>
           </div>
           <div className="">
             <img

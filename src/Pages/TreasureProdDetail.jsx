@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, IronTwoTone, Remove } from "@mui/icons-material";
 import Star from "../Components/Star/Star";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../Redux/features/addToCartSlide";
+import { Toaster, toast } from "react-hot-toast";
+
 
 const TreasureProdDetail = () => {
   const location = useLocation();
@@ -9,6 +13,10 @@ const TreasureProdDetail = () => {
   const {
     state: { item },
   } = location;
+
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart?.cartArr);
 
   const [expanded, setExpanded] = useState(false);
   const [qty, setQty] = useState(1);
@@ -58,7 +66,22 @@ const TreasureProdDetail = () => {
     setQty(isNaN(value) ? 1 : value);
   };
 
+  const handleCart = (item) => {
+    const existingCartItem = cart.find((cartItem) => cartItem._id === item._id)
+
+    const cartItem = {...item, qty}
+
+    if(!existingCartItem) {
+      dispatch(addToCart(cartItem))
+      toast.success("Added to Cart!!!")
+    } else {
+      toast.success("Quantity increase!!!")
+    }
+
+  }
+
   return (
+    <>
     <div className="mx-12 mt-12">
       <div className="flex">
         <div className="w-1/2">
@@ -136,7 +159,9 @@ const TreasureProdDetail = () => {
               </button>
             </div>
             <div>
-              <button className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group">
+              <button   
+              onClick={() => handleCart(item)}
+              className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group">
                 <span className="font-fontbody group-hover:text-white">
                   Add To Cart
                 </span>
@@ -146,6 +171,8 @@ const TreasureProdDetail = () => {
         </div>
       </div>
     </div>
+    <Toaster position = "top-center" reverseOrder = {true} />
+    </>
   );
 };
 

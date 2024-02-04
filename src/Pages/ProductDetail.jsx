@@ -1,20 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Remove, Add } from "@mui/icons-material";
-import {
-  incQty,
-  decQty,
-  setQty,
-  setInstock,
-} from "../Redux/features/qtyControlSlide";
 import { useDispatch, useSelector } from "react-redux";
 import Star from "../Components/Star/Star";
 import { toast, Toaster } from "react-hot-toast";
 import { addToCart } from "../Redux/features/addToCartSlide";
 // import { useMutation, useMutationState } from "@tanstack/react-query";
 // import axios from "axios";
-
-//! Redux
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -24,14 +16,14 @@ const ProductDetail = () => {
 
   const dispatch = useDispatch();
 
-  const qty = useSelector((state) => state.qtyAndInstockController?.quantity);
+  const cartQty = useSelector((state) => state.qty?.quantity);
   const cart = useSelector((state) => state.cart?.cartArr);
 
-  const instockFromRedux = useSelector(
-    (state) => state.qtyAndInstockController?.instock
-  );
+  // const instockFromRedux = useSelector(
+  //   (state) => state.qtyAndInstockController?.instock
+  // );
 
-  console.log("instock from redux...", instockFromRedux);
+  // console.log("instock from redux...", instockFromRedux);
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
@@ -104,17 +96,26 @@ const ProductDetail = () => {
     setSelectedSize(newSize);
   };
 
+
+
+  const [qty, setQty] = useState(1)
   const increaseQtyHandler = () => {
-    dispatch(incQty());
+    setQty(qty + 1)
   };
 
   const decreaseQtyHandler = () => {
-    dispatch(decQty());
+    if(qty > 1) {
+      setQty(qty - 1)
+    }
   };
 
-  const handleQtyChange = (event) => {
-    const value = parseInt(event.target.value, 10);
-    dispatch(setQty(isNaN(value) ? 1 : value));
+  const handleQtyChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value) && value >= 1) {
+      setQty(value);
+    } else {
+      setQty(1);
+    }
   };
 
   // useEffect(() => {
@@ -124,14 +125,19 @@ const ProductDetail = () => {
   //   }
   // }, [item, selectedSize]);
 
-  const handleCart = (clickedItem) => {
-    const existingCartItem = cart.find((item) => item._id === clickedItem._id);
+  const handleCart = (selectedType) => {
+    const existingCartItem = cart.find((item) => item._id === selectedType._id);
 
-    if (!existingCartItem) {
-      dispatch(addToCart(clickedItem));
-      toast.success("Added to Cart!!!");
+    console.log('clicked selected type....',selectedType);
+
+    // new line
+    const cartItem = {...selectedType, qty, name:item.name}
+
+    if(!existingCartItem) {
+      dispatch(addToCart(cartItem))
+      toast.success("Added to cart!!!")
     } else {
-      toast.success("Item already in Cart!");
+      toast.success("Quantity increase!!!")
     }
   };
 
@@ -214,15 +220,15 @@ const ProductDetail = () => {
 
         <div className="flex items-center text-comTxt">
           <span className="font-fontbody text-slate-700">In Stock: </span>
-          {instockFromRedux.map((prod) => (
+          {/* {instockFromRedux.map((prod) => (
             <span key={prod._id}>{prod.instock}</span>
-          ))}
+          ))} */}
         </div>
 
         <div className="flex justify-center space-x-10">
           <div className="flex items-center justify-center space-x-4">
             <button
-              onClick={() => decreaseQtyHandler()}
+              onClick={() => decreaseQtyHandler(item._id)}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Remove className="hover:text-white" />
@@ -234,7 +240,7 @@ const ProductDetail = () => {
               className="border w-12 text-center border-slate-400 focus:outline-none focus:bg-slate-100"
             />
             <button
-              onClick={() => increaseQtyHandler()}
+              onClick={() => increaseQtyHandler(item._id)}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Add className="hover:text-white" />
@@ -242,7 +248,7 @@ const ProductDetail = () => {
           </div>
           <div>
             <button
-              onClick={() => handleCart(item)}
+              onClick={() => handleCart(item.type.find(prod => prod.size === selectedSize))}
               className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group"
             >
               <span className="font-fontbody group-hover:text-white">
