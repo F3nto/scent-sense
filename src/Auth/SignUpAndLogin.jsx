@@ -4,19 +4,23 @@ import Login from "./Login";
 import { Close } from "@mui/icons-material";
 
 const SignUpAndLogin = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState("SignUp");
+  const [activeTab, setActiveTab] = useState("Login");
 
   const handleClickTab = (tab) => {
     setActiveTab(tab);
   };
 
+  const handleSignUpClick = () => {
+    setActiveTab("SignUp");
+  }
+
   const renderContent = () => {
     switch (activeTab) {
+      case "Login":
+        return <Login onSignUpClick = {handleSignUpClick} />;
+
       case "SignUp":
         return <SignUp />;
-
-      case "Login":
-        return <Login />;
 
       default:
         return null;
@@ -30,6 +34,18 @@ const SignUpAndLogin = ({ onClose }) => {
         className="bg-white p-8 rounded-tr-3xl rounded-br-3xl z-30 mx-36 mt-10 relative"
       >
         <div className="flex items-center space-x-10 mb-4">
+        <button
+            onClick={() => handleClickTab("Login")}
+            className={`relative group ${
+              activeTab === "Login" ? "text-comTxt" : "text-gray-500"
+            }`}
+          >
+            <text className="font-fontbody group-hover:text-comTxt">Login</text>
+            <span
+              className={`absolute bottom-0 left-0 w-0 h-0.5 bg-comTxt transition-all duration-300 ease-in-out group-hover:w-full
+            ${activeTab === "Login" && "w-full bg-comTxt"}`}
+            ></span>
+          </button>
           <button
             onClick={() => handleClickTab("SignUp")}
             className={`relative group ${
@@ -44,18 +60,7 @@ const SignUpAndLogin = ({ onClose }) => {
             ${activeTab === "SignUp" && "w-full bg-comTxt"}`}
             ></span>
           </button>
-          <button
-            onClick={() => handleClickTab("Login")}
-            className={`relative group ${
-              activeTab === "Login" ? "text-comTxt" : "text-gray-500"
-            }`}
-          >
-            <text className="font-fontbody group-hover:text-comTxt">Login</text>
-            <span
-              className={`absolute bottom-0 left-0 w-0 h-0.5 bg-comTxt transition-all duration-300 ease-in-out group-hover:w-full
-            ${activeTab === "Login" && "w-full bg-comTxt"}`}
-            ></span>
-          </button>
+         
         </div>
         <div className="absolute right-5 top-2">
           <div className="w-10 h-10 rounded-full hover:text-white hover:bg-hovcolor shadow-slate-600 shadow-sm bg-header  relative flex justify-center items-center">

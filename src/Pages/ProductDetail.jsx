@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Star from "../Components/Star/Star";
 import { toast, Toaster } from "react-hot-toast";
 import { addToCart } from "../Redux/features/addToCartSlide";
+import { updateInstock } from "../Redux/features/instockSlice";
 // import { useMutation, useMutationState } from "@tanstack/react-query";
 // import axios from "axios";
 
@@ -16,17 +17,15 @@ const ProductDetail = () => {
 
   const dispatch = useDispatch();
 
-  const cartQty = useSelector((state) => state.qty?.quantity);
   const cart = useSelector((state) => state.cart?.cartArr);
-
-  // const instockFromRedux = useSelector(
-  //   (state) => state.qtyAndInstockController?.instock
-  // );
-
-  // console.log("instock from redux...", instockFromRedux);
+  const instock = useSelector((state) => state.instock?.instock);
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
+
+  const selectedProd = item.type.find((prod) => prod.size === selectedSize);
+  let selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
+  console.log("Selected product instock:", selectedProdInstock);
 
   const truncateTxt = (txt, maxlength) => {
     return expanded
@@ -63,49 +62,53 @@ const ProductDetail = () => {
     };
   }, [updateWindowdimension]);
 
-  // const updateInstock = () => {
-  //   const selectedType = item.type.find((prod) => prod.size === selectedSize);
-  //   dispatch(
-  //     setInstock({ _id: selectedType._id, instock: selectedType.instock })
-  //   );
-  // };
+  useEffect(() => {
+    dispatch(
+      updateInstock({ id: selectedProd._id, instock: selectedProd.instock })
+    );
+  }, [selectedProd, dispatch, selectedProd._id]);
 
-  // const mutationKey = ["patch"];
-
-  // const mutation = useMutation({
-  //   mutationKey,
-  //   mutationFn: () => {
-  //     return axios.patch(
-  //       `http://localhost:4000/api/v1/all-products/${item._id}`,
-  //       {
-  //         instock: instockFromRedux,
-  //       }
-  //     );
-  //   },
-  //   onSuccess: (data) => {
-  //     console.log("API put success!", data);
-  //   },
-  //   onError: (error) => {
-  //     console.error("API put fail!!!", error);
-  //   },
-  // });
-
-  // const { isError, isSuccess } = mutation;
+  useEffect(() => {
+    if (selectedProdInstock) {
+      dispatch(
+        updateInstock({ id: selectedProd._id, instock: selectedProdInstock })
+      );
+    }
+  }, [selectedProdInstock, dispatch, selectedProd._id]);
 
   const handleSizeChange = (newSize) => {
     setSelectedSize(newSize);
+    if (selectedSize) {
+      setQty(1);
+    }
   };
 
-
-
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState(1);
   const increaseQtyHandler = () => {
-    setQty(qty + 1)
+    const selectedProd = item.type.find((prod) => prod.size === selectedSize);
+    const selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
+    if (selectedProdInstock > 0) {
+      setQty((prev) => prev + 1);
+      dispatch(
+        updateInstock({
+          id: selectedProd._id,
+          instock: selectedProdInstock - 1,
+        })
+      );
+    }
   };
 
   const decreaseQtyHandler = () => {
-    if(qty > 1) {
-      setQty(qty - 1)
+    const selectedProd = item.type.find((prod) => prod.size === selectedSize);
+    const selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
+    if (qty > 1 && selectedProdInstock < selectedProd.instock) {
+      setQty((prev) => prev - 1);
+      dispatch(
+        updateInstock({
+          id: selectedProd._id,
+          instock: selectedProdInstock + 1,
+        })
+      );
     }
   };
 
@@ -118,26 +121,18 @@ const ProductDetail = () => {
     }
   };
 
-  // useEffect(() => {
-  //   updateInstock();
-  //   if(instockFromRedux) {
-  //     mutation.mutate()
-  //   }
-  // }, [item, selectedSize]);
-
   const handleCart = (selectedType) => {
     const existingCartItem = cart.find((item) => item._id === selectedType._id);
 
-    console.log('clicked selected type....',selectedType);
+    console.log("clicked selected type....", selectedType);
 
-    // new line
-    const cartItem = {...selectedType, qty, name:item.name}
+    const cartItem = { ...selectedType, qty, name: item.name };
 
-    if(!existingCartItem) {
-      dispatch(addToCart(cartItem))
-      toast.success("Added to cart!!!")
+    if (!existingCartItem) {
+      dispatch(addToCart(cartItem));
+      toast.success("Added to cart!!!");
     } else {
-      toast.success("Quantity increase!!!")
+      toast.success("Quantity increase!!!");
     }
   };
 
@@ -220,9 +215,7 @@ const ProductDetail = () => {
 
         <div className="flex items-center text-comTxt">
           <span className="font-fontbody text-slate-700">In Stock: </span>
-          {/* {instockFromRedux.map((prod) => (
-            <span key={prod._id}>{prod.instock}</span>
-          ))} */}
+          {selectedProdInstock - 1}
         </div>
 
         <div className="flex justify-center space-x-10">
@@ -248,7 +241,9 @@ const ProductDetail = () => {
           </div>
           <div>
             <button
-              onClick={() => handleCart(item.type.find(prod => prod.size === selectedSize))}
+              onClick={() =>
+                handleCart(item.type.find((prod) => prod.size === selectedSize))
+              }
               className="px-5 bg-gradient-to-r from-header to-hovcolor py-2 rounded-lg hover:from-hovcolor hover:to-comTxt shadow-slate-600 shadow-md group"
             >
               <span className="font-fontbody group-hover:text-white">

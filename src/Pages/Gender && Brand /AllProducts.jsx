@@ -46,7 +46,7 @@ const AllProducts = ({ data }) => {
   const [prodHeight, setProdHeight] = useState(getInitialHeight());
 
   const getInitialItemPerPage = () => {
-    return 12
+    return 12;
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,11 +78,33 @@ const AllProducts = ({ data }) => {
     }
   };
 
-  const handleShoppingCart = (clickedItem) => {
-    if (cart.find((cartItem) => cartItem._id === clickedItem._id)) {
-      dispatch(removeFromCart(clickedItem._id));
+  const handleShoppingCart = (item) => {
+
+    const firstType = item.type[0];
+    let qty = 1;
+
+    const cartItem = {
+      _id : item._id,
+      img : firstType.img,
+      size : firstType.size,
+      price : firstType.price,
+    }
+
+    const toCartItem = {...cartItem, qty, name: item.name}
+
+
+    if (
+      cart.some((cartItem) => cartItem._id === item._id) ||
+      item.type.some((type) =>
+        cart.some((cartItem) => cartItem._id === type._id)
+      )
+    ) {
+      dispatch(removeFromCart(item._id));
+      item.type.forEach((type) => {
+        dispatch(removeFromCart(type._id));
+      });
     } else {
-      dispatch(addToCart(clickedItem));
+      dispatch(addToCart(toCartItem));
     }
   };
 
@@ -129,9 +151,12 @@ const AllProducts = ({ data }) => {
                       onClick={() => handleShoppingCart(item)}
                       className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
                     >
-                      {cart.some((cartItem) => cartItem._id === item._id) ? (
+                      {item.type.some((type, index) =>
+                        cart.some((cartItem) => cartItem._id === type._id)
+                      ) ||
+                      cart.some((cartItem) => cartItem._id === item._id) ? (
                         <div className="text-[#9A4528]">
-                        <ShoppingCart />
+                          <ShoppingCart />
                         </div>
                       ) : (
                         <ShoppingCart />

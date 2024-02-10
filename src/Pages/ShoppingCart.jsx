@@ -11,6 +11,12 @@ const ShoppingCart = () => {
   console.log("cart Item...", cart);
   const dispatch = useDispatch();
 
+  const allTotal = cart.reduce((total, item) => {
+    const itemTotal = item.price * item.qty;
+    return total + itemTotal;
+  }, 0);
+
+
   // const [qty, setQty] = useState(cart[0]?.qty);
   // const increaseQtyHandler = () => {
   //   setQty( (prev) => prev + 1)
@@ -89,13 +95,13 @@ const ShoppingCart = () => {
       width: 120,
       renderCell: (params) => {
         const item = cart[params.row.id - 1];
-        return <div>{item.price}</div>;
+        return <div>$ {item.price}</div>;
       },
     },
     {
       field: "quantity",
       headerName: "Quantity",
-      width: 250,
+      width: 200,
       renderCell: (params) => {
         return (
           <div className="flex items-center justify-center space-x-4">
@@ -130,7 +136,19 @@ const ShoppingCart = () => {
         );
       },
     },
-    { field: "total", headerName: "Total", width: 120 },
+    { field: "total", 
+      headerName: "Total Price", 
+      width: 120,
+      renderCell : (params) => {
+        const item = cart[params.row.id - 1];
+        const total = item.price * item.qty;
+        return (
+          <div>
+            $ {total}
+          </div>
+        )
+      }
+    },
   ];
 
   //! Rows
@@ -141,7 +159,7 @@ const ShoppingCart = () => {
   }));
 
   return (
-    <div className="container mx-auto mt-12">
+    <div className="container mx-12 mt-12">
       <div className="text-center mt-12">
         <h1 className="relative flex justify-center items-center text-3xl font-bold">
           Shopping Cart
@@ -149,7 +167,7 @@ const ShoppingCart = () => {
         </h1>
       </div>
       {cart?.length > 0 ? (
-        <div className="flex justify-center items-center mt-10">
+        <div className="flex justify-between items-center mt-10">
           <div
             style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
           >
@@ -158,11 +176,12 @@ const ShoppingCart = () => {
               columns={columns}
               pageSize={5}
               checkboxSelection={false}
-              disableSelectionOnClick
+              disableSelectionOnClick 
             />
           </div>
-
-          <div className="flex-1 bg-orange-600 p-6 text-white">
+          
+          <div className="flex-1 ml-5"> 
+          <div className="bg-orange-600 p-6 text-white">
             <div className="text-xl font-bold mb-4">Order Summary</div>
             <div className="flex justify-between">
               <span>Subtotal:</span>
@@ -170,16 +189,17 @@ const ShoppingCart = () => {
             </div>
             <div className="flex justify-between mt-2">
               <span>Shipping:</span>
-              <span>$shipping</span>
+              <span>free shipping</span>
             </div>
             <div className="flex justify-between mt-2">
-              <span>Total:</span>
-              <span>$total</span>
+              <span>All Total:</span>
+              <span>$ {allTotal.toFixed(2)}</span>
             </div>
             <button className="mt-4 bg-white text-orange-600 py-2 px-4 rounded-full">
               Checkout
             </button>
           </div>
+        </div>
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center mt-40">

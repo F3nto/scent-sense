@@ -13,12 +13,13 @@ import {
   addToWishList,
   removeWishList,
 } from "../../Redux/features/wishListSlide";
+import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
 
 const BrandProd = ({ data }) => {
   const dispatch = useDispatch();
 
   const wishList = useSelector((state) => state.wishList?.wishListArr);
-
+  const cart = useSelector((state) => state.cart?.cartArr);
   const getInitialHeight = () => {
     return window.innerWidth >= 768 ? "250px" : "230px";
   };
@@ -64,6 +65,33 @@ const BrandProd = ({ data }) => {
     }
   };
 
+  const handleShoppingCart = (item) => {
+    const firstType = item.type[0];
+    let qty = 1;
+    const cartItem = {
+      _id: item._id,
+      img: firstType.img,
+      size: firstType.size,
+      price: firstType.price,
+    };
+
+    const toCartItem = { ...cartItem, qty, name: item.name };
+
+    if (
+      cart.some((cartItem) => cartItem._id === item._id) ||
+      item.type.some((type) =>
+        cart.some((cartItem) => cartItem._id === type._id)
+      )
+    ) {
+      dispatch(removeFromCart(item._id));
+      item.type.forEach((type) => {
+        dispatch(removeFromCart(type._id));
+      });
+    } else {
+      dispatch(addToCart(toCartItem));
+    }
+  };
+
   return (
     <div className="">
       <div className="grid grid-cols-4">
@@ -103,8 +131,20 @@ const BrandProd = ({ data }) => {
                         <FavoriteBorderOutlined />
                       )}
                     </button>
-                    <button className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full ">
-                      <ShoppingCart />
+                    <button
+                      onClick={() => handleShoppingCart(item)}
+                      className="flex justify-center items-center w-10 h-10 hover:bg-header hover:scale-110 hover:shadow-white transform-all duration-200 ease-in bg-white shadow-black shadow-md rounded-full "
+                    >
+                      {item.type.some((type, index) =>
+                        cart.some((cartItem) => cartItem._id === type._id)
+                      ) ||
+                      cart.some((cartItem) => cartItem._id === item._id) ? (
+                        <div className="text-[#9A4528]">
+                          <ShoppingCart />
+                        </div>
+                      ) : (
+                        <ShoppingCart />
+                      )}
                     </button>
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 
-const Login = () => {
+const Login = ({onSignUpClick}) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -64,6 +64,13 @@ const Login = () => {
           <button className="px-4 py-2.5 bg-gradient-to-r from-hovcolor to-header rounded-md hover:from-header hover:to-hovcolor text-comTxt hover:text-white w-full">
             Login
           </button>
+          <div className="mt-4">
+          <text className="font-fontbody">Do you have an account? 
+          <button
+          onClick={onSignUpClick}
+          className="text-blue-500 hover:text-blue-700 ml-3 hover:underline underline-offset-4">Sing up</button> 
+          </text>
+          </div>
         
         </div>
 
