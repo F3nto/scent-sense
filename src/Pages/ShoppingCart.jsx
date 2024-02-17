@@ -2,40 +2,54 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
-import { Remove, Add } from "@mui/icons-material";
+// import { Remove, Add } from "@mui/icons-material";
+// import { addToCart } from "../Redux/features/addToCartSlide";
+// import { updateInstock } from "../Redux/features/instockSlice";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
   const cart = useSelector((state) => state?.cart?.cartArr);
-
-  // const cartQty = useSelector((state) => state.qty.quantity.quantity);
   console.log("cart Item...", cart);
+
+
+
+  const instock = useSelector((state) => state.instock?.instock);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const allTotal = cart.reduce((total, item) => {
     const itemTotal = item.price * item.qty;
     return total + itemTotal;
   }, 0);
 
-
-  // const [qty, setQty] = useState(cart[0]?.qty);
-  // const increaseQtyHandler = () => {
-  //   setQty( (prev) => prev + 1)
+  // const increaseQtyHandler = (itemId) => {
+  //   const updatedCart = cart.map((item) =>
+  //     item._id === itemId && instock[item._id] > 0
+  //       ? { ...item, qty: item.qty + 1 }
+  //       : item
+  //   );
+  //   dispatch(addToCart(updatedCart));
+  //   dispatch(updateInstock({ id: itemId, instock: instock[itemId] - 1 }));
   // };
 
-  // const decreaseQtyHandler = () => {
-  //   if(qty > 1) {
-  //     setQty(qty - 1)
-  //   }
+  // const decreaseQtyHandler = (itemId) => {
+  //   const updatedCart = cart.map((item) =>
+  //     item._id === itemId && item.qty > 1
+  //       ? { ...item, qty: item.qty - 1 }
+  //       : item
+  //   );
+  //   dispatch(addToCart(updatedCart));
+  //   dispatch(updateInstock({ id: itemId, instock: instock[itemId] + 1 }));
   // };
 
-  // const handleQtyChange = (e) => {
+  // const handleQtyChange = (e, itemId) => {
   //   const value = parseInt(e.target.value);
-  //   if (!isNaN(value) && value >= 1) {
-  //     setQty(value);
-  //   } else {
-  //     setQty(1);
-  //   }
   // };
+
+  const handleBuyNow = () => {
+    navigate("/delivery-info")
+
+  }
 
   //! columns
 
@@ -90,6 +104,16 @@ const ShoppingCart = () => {
       },
     },
     {
+      field: "Instock",
+      headerName: "Instock",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <div className="flex items-center">{params?.row?.instock - 1}</div>
+        );
+      },
+    },
+    {
       field: "price",
       headerName: "Price",
       width: 120,
@@ -101,53 +125,20 @@ const ShoppingCart = () => {
     {
       field: "quantity",
       headerName: "Quantity",
-      width: 200,
+      width: 120,
       renderCell: (params) => {
-        return (
-          <div className="flex items-center justify-center space-x-4">
-            <button
-              // onClick={() => decreaseQtyHandler()}
-              className="bg-header px-2 py-1.5 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
-            >
-              <Remove
-                className="hover:text-white"
-                style={{ width: "20px", height: "20px" }}
-              />
-            </button>
-            <input
-              type="text"
-              // value={cart?.qty}
-
-              // new line
-              value={params?.row?.quantity}
-              // onChange={handleQtyChange}
-              className="border w-12 py-1 shadow-slate-300 shadow-inner text-center rounded-md focus:outline-none focus:bg-slate-100"
-            />
-            <button
-              // onClick={() => increaseQtyHandler()}
-              className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
-            >
-              <Add
-                className="hover:text-white"
-                style={{ width: "20px", height: "20px" }}
-              />
-            </button>
-          </div>
-        );
+        return <div>{params?.row?.quantity}</div>;
       },
     },
-    { field: "total", 
-      headerName: "Total Price", 
+    {
+      field: "total",
+      headerName: "Total Price",
       width: 120,
-      renderCell : (params) => {
+      renderCell: (params) => {
         const item = cart[params.row.id - 1];
         const total = item.price * item.qty;
-        return (
-          <div>
-            $ {total}
-          </div>
-        )
-      }
+        return <div>$ {total}</div>;
+      },
     },
   ];
 
@@ -155,7 +146,27 @@ const ShoppingCart = () => {
 
   const rows = cart?.map((item, index) => ({
     id: index + 1,
-    quantity: item?.qty,
+    instock: instock[item._id],
+    quantity: (
+      <div className="flex items-center justify-center">
+        {/* <button
+          onClick={() => decreaseQtyHandler(item._id)}
+          className="bg-header px-2 py-1.5 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+        >
+          <Remove className="hover:text-white" />
+        </button> */}
+        <input
+          value={item.qty}
+          className="border w-12 py-1 shadow-slate-300 shadow-inner text-center rounded-md focus:outline-none focus:bg-slate-100"
+        />
+        {/* <button
+          onClick={() => increaseQtyHandler(item._id)}
+          className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
+        >
+          <Add className="hover:text-white" />
+        </button> */}
+      </div>
+    ),
   }));
 
   return (
@@ -176,30 +187,33 @@ const ShoppingCart = () => {
               columns={columns}
               pageSize={5}
               checkboxSelection={false}
-              disableSelectionOnClick 
+              disableSelectionOnClick
             />
           </div>
-          
-          <div className="flex-1 ml-5"> 
-          <div className="bg-orange-600 p-6 text-white">
-            <div className="text-xl font-bold mb-4">Order Summary</div>
-            <div className="flex justify-between">
-              <span>Subtotal:</span>
-              <span>$subtotal</span>
+
+          <div className="flex-1 ml-5">
+            <div className="bg-slate-600 p-6 text-white">
+              <div className="text-xl font-bold mb-4">Order Summary</div>
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>$subtotal</span>
+              </div>
+              <div className="flex justify-between mt-2">
+                <span>Shipping:</span>
+                <span>free shipping</span>
+              </div>
+              <div className="flex justify-between mt-2">
+                <span>All Total:</span>
+                <span>$ {allTotal.toFixed(2)}</span>
+              </div>
+              <button
+              onClick={() => handleBuyNow()}
+              
+              className="mt-4 bg-white hover:bg-hovcolor hover:text-white text-comTxt py-2 px-4 rounded-full">
+                <text className="font-semibold">Buy Now</text>
+              </button>
             </div>
-            <div className="flex justify-between mt-2">
-              <span>Shipping:</span>
-              <span>free shipping</span>
-            </div>
-            <div className="flex justify-between mt-2">
-              <span>All Total:</span>
-              <span>$ {allTotal.toFixed(2)}</span>
-            </div>
-            <button className="mt-4 bg-white text-orange-600 py-2 px-4 rounded-full">
-              Checkout
-            </button>
           </div>
-        </div>
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center mt-40">

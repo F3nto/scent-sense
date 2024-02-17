@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import {useMutation} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addToUser } from "../Redux/features/UserSlice";
+import { toast, Toaster } from "react-hot-toast";
 
-const OtpVerification = ({ onClose }) => {
+const OtpVerification = ({ onCloseAllModal, onClose, formData }) => {
   const [verificationCode, setVerificationCode] = useState([
     "",
     "",
@@ -14,7 +17,11 @@ const OtpVerification = ({ onClose }) => {
   const inputRefs = useRef([]);
   const [timer, setTimer] = useState(60);
   const [disabled, setDisabled] = useState(false);
-  const [otpCorrect, setOtpCorrect] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [retryAnimation, setRetryAnimation] = useState(false); // State to trigger the animation again
+
+  const dispatch = useDispatch();
 
   const handleVerificationCodeChange = (index, value) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
@@ -33,18 +40,59 @@ const OtpVerification = ({ onClose }) => {
     }
   };
 
-  let enteredCode = verificationCode.join("")
-  const mutation = useMutation({
-    mutationFn : (enteredCode) => {
-      return axios.post(`http://localhost:4000/api/v1/sign-up`, {otp : enteredCode});
+  let enteredCode = verificationCode.join("");
+
+  const sendOTPMutation = useMutation({
+    mutationFn: (formData) => {
+      return axios.post(`http://localhost:4000/api/v1/send-otp`, {
+        email: formData.email,
+      });
+    },
+  });
+
+  const verifyOTPMutation = useMutation({
+    mutationFn: ({ enteredCode, formData }) => {
+      return axios.post(`http://localhost:4000/api/v1/verify-otp`, {
+        otp: enteredCode,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+    },
+    onSuccess: (data) => {
+      if (data && data.data && data.data.success) {
+        const userData = data.data.user;
+        dispatch(addToUser(userData));
+        setSuccess(true);
+        setError("");
+        toast.success("SignUp Successful");
+        setTimeout(() => {
+          onCloseAllModal();
+        }, 1500);
+      }
+    },
+    onError: (error) => {
+      setError("Verification failed. Please enter a valid OTP");
+      setRetryAnimation(true);
+    },
+  });
+
+  useEffect(() => {
+    if (retryAnimation) {
+      const timeout = setTimeout(() => {
+        setRetryAnimation(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
     }
-  })
+  }, [retryAnimation]);
 
-  const handleVerify = async () => {
-    mutation.mutate(enteredCode)
-
-
-    console.log("verify successful")
+  const handleVerify = () => {
+    if (!enteredCode) {
+      setRetryAnimation(true);
+      setError("Please enter OTP.");
+      return;
+    }
+    verifyOTPMutation.mutate({ enteredCode, formData });
   };
 
   useEffect(() => {
@@ -60,63 +108,85 @@ const OtpVerification = ({ onClose }) => {
   }, [timer]);
 
   const handleResend = () => {
-    console.log("Requesting another verification code...");
+    sendOTPMutation.mutate(formData);
     setDisabled(true);
     setTimer(60);
   };
 
+  const userEmail = formData.email;
+  const hiddenEmail =
+    userEmail.substring(0, 3) +
+    "*".repeat(userEmail.indexOf("@") - 3) +
+    userEmail.substring(userEmail.indexOf("@"));
+
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
+    <>
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-white p-6 rounded-lg shadow-md"
+        onClick={onClose}
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       >
-        <h1 className="text-2xl font-semibold mb-4 text-center">
-          Email Verification
-        </h1>
-        <p className="mb-4">Verification code sent to pya*******@gmail.com</p>
-        <div className="flex justify-center mb-4">
-          {verificationCode.map((digit, index) => (
-            <input
-              key={index}
-              type="text"
-              maxLength={1}
-              className="border border-gray-300 rounded-md p-2 mr-2 w-12 text-center"
-              value={digit}
-              onChange={(e) =>
-                handleVerificationCodeChange(index, e.target.value)
-              }
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              ref={(inputRef) => (inputRefs.current[index] = inputRef)}
-            />
-          ))}
-        </div>
-        <div className="flex justify-center">
-          <button
-            onClick={handleVerify}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Verify
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-white p-6 rounded-lg shadow-md"
+        >
+          <h1 className="text-2xl font-semibold mb-4 text-center">
+            Email Verification
+          </h1>
+          <p className="mb-4">Verification code sent to {hiddenEmail}</p>
+          <div className="flex justify-center mb-4">
+            {verificationCode.map((digit, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength={1}
+                className={`${retryAnimation && "shake-load"} ${
+                  error && "border-red-300 shadow-red-500 shadow-sm"
+                } ${
+                  success && "border-green-300 shadow-green-500 shadow-sm"
+                } border border-gray-300 rounded-md p-2 mr-2 w-12 text-center`}
+                value={digit}
+                onChange={(e) =>
+                  handleVerificationCodeChange(index, e.target.value)
+                }
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={(inputRef) => (inputRefs.current[index] = inputRef)}
+              />
+            ))}
+          </div>
+
+          {(error || success) && (
+            <p
+              className={`text-${error ? "red" : "green"}-500 text-center mb-4`}
+            >
+              {error ? error : "OTP verification successful!"}
+            </p>
+          )}
+
+          <div className="flex justify-center">
+            <button
+              onClick={handleVerify}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Verify
+            </button>
+            <button
+              onClick={handleResend}
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md ml-4"
+            >
+              Resend
+            </button>
+          </div>
+          <p className="mt-4 w-96 text-center mx-2 text-sm">
+            Wait <span className="text-indigo-700">{timer} s</span> before
+            requesting another verification code
+          </p>
+          <button className="absolute top-2 right-2" onClick={onClose}>
+            Close
           </button>
-          <button
-            onClick={handleResend}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md ml-4"
-          >
-            Resend
-          </button>
         </div>
-        <p className="mt-4 w-96 text-center mx-2 text-sm">
-          Wait <span className="text-indigo-700">{timer} s</span> before
-          requesting another verification code
-        </p>
-        <button className="absolute top-2 right-2" onClick={onClose}>
-          Close
-        </button>
       </div>
-    </div>
+      <Toaster position="top-center" reverseOrder={true} />
+    </>
   );
 };
 

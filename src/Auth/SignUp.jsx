@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import {
-  Person,
-  Email,
-  Visibility,
-  VisibilityOff,
-  Google,
-} from "@mui/icons-material";
+import { Person, Email, Visibility, VisibilityOff } from "@mui/icons-material";
 import OtpVerification from "./OtpVerification";
+import { toast, Toaster } from "react-hot-toast";
 
-const SignUp = () => {
+
+const SignUp = ({ onCloseAllModal }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,6 +17,7 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showotpModal, setShowOtpModal] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,8 +52,27 @@ const SignUp = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: (formData) => {
-      return axios.post(`http://localhost:4000/api/v1/sign-up`, formData);
+    mutationFn: (email) => {
+      return axios.post(`http://localhost:4000/api/v1/send-otp`, {
+        email: email,
+      });
+    },
+
+    onSuccess: (data) => {
+      if (data.data.success) {
+        setShowOtpModal(true);
+      }
+    },
+
+    onError: (error) => {
+      if (error.response && error.response.status === 409) {
+        setTimeout(() => {
+          setIsLoading(false);
+          toast.error("User already exists");
+        }, 1800);
+      } else {
+        console.error("Error:", error);
+      }
     },
   });
 
@@ -86,8 +102,8 @@ const SignUp = () => {
     setError(newError);
 
     if (isValid) {
-      mutation.mutate(formData);
-      setShowOtpModal(true);
+      mutation.mutate(formData.email);
+      setIsLoading(true);
     } else {
       console.log("Form has errors. Please complete all fields.");
     }
@@ -95,6 +111,18 @@ const SignUp = () => {
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const LoadingDots = ({ isLoading }) => {
+    if (!isLoading) return null;
+
+    return (
+      <>
+        <span className="dot-load">.</span>
+        <span className="dot-load">.</span>
+        <span className="dot-load">.</span>
+      </>
+    );
   };
 
   return (
@@ -160,10 +188,17 @@ const SignUp = () => {
               )}
             </div>
             <button
+              disabled={loading}
               onClick={(e) => handleSubmit(e)}
-              className="px-4 py-2.5 bg-gradient-to-r from-hovcolor to-header rounded-md hover:from-header hover:to-hovcolor text-comTxt hover:text-white w-full"
+              className={`px-4 py-2.5 bg-gradient-to-r from-hovcolor to-header rounded-md hover:from-header hover:to-hovcolor text-comTxt hover:text-white w-full`}
             >
-              Sign Up
+              {loading ? (
+                <>
+                  Loading <LoadingDots isLoading={loading} />
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </button>
             <div>
               <p className="font-fontbody text-sm">
@@ -172,10 +207,18 @@ const SignUp = () => {
                 Terms of use and Privacy Policy
               </p>
             </div>
-            <button className="px-4 py-2.5 text-white bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-md hover:from-green-600 hover:via-yellow-600 hover:to-red-600 w-full flex items-center justify-center">
-              <Google className="mr-2" />
-              Google
-            </button>
+            {/* <button 
+            onClick={handleGoogleSignUp}
+            className="px-4 py-2.5 bg-gradient-to-r from-header to-hovcolor hover:from-hovcolor hover:to-header group rounded-md w-full flex items-center justify-center">
+              <img
+                src={require("../Assets/icons/google.png")}
+                style={{ width: "26px", height: "26px" }}
+                alt=""
+              />
+              <text className="ml-2 text-comTxt group-hover:text-white">
+                Continuous with google
+              </text>
+            </button> */}
           </div>
 
           <div className="flex-1">
@@ -189,8 +232,13 @@ const SignUp = () => {
         </div>
       </div>
       {showotpModal && (
-        <OtpVerification onClose={() => setShowOtpModal(false)} />
+        <OtpVerification
+          formData={formData}
+          onClose={() => setShowOtpModal(false)}
+          onCloseAllModal={onCloseAllModal}
+        />
       )}
+      <Toaster position="top-center" reverseOrder={true} />
     </>
   );
 };

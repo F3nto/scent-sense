@@ -6,8 +6,6 @@ import Star from "../Components/Star/Star";
 import { toast, Toaster } from "react-hot-toast";
 import { addToCart } from "../Redux/features/addToCartSlide";
 import { updateInstock } from "../Redux/features/instockSlice";
-// import { useMutation, useMutationState } from "@tanstack/react-query";
-// import axios from "axios";
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -19,6 +17,7 @@ const ProductDetail = () => {
 
   const cart = useSelector((state) => state.cart?.cartArr);
   const instock = useSelector((state) => state.instock?.instock);
+  console.log("instock left", instock);
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
@@ -62,6 +61,23 @@ const ProductDetail = () => {
     };
   }, [updateWindowdimension]);
 
+  const [quantities, setQuantities] = useState({});
+
+  useEffect(() => {
+    const initialQuantities = {};
+    item.type.forEach((prod) => {
+      initialQuantities[prod._id] = 1;
+    });
+    setQuantities(initialQuantities);
+  }, [item]);
+
+  const updateQuantity = (productId, value) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productId]: value,
+    }));
+  };
+
   useEffect(() => {
     dispatch(
       updateInstock({ id: selectedProd._id, instock: selectedProd.instock })
@@ -78,46 +94,43 @@ const ProductDetail = () => {
 
   const handleSizeChange = (newSize) => {
     setSelectedSize(newSize);
-    if (selectedSize) {
-      setQty(1);
-    }
+    updateQuantity(selectedSize, 1);
   };
 
-  const [qty, setQty] = useState(1);
-  const increaseQtyHandler = () => {
-    const selectedProd = item.type.find((prod) => prod.size === selectedSize);
-    const selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
+  const increaseQtyHandler = (productId) => {
+    const selectedProdInstock = instock[productId];
     if (selectedProdInstock > 0) {
-      setQty((prev) => prev + 1);
+      const updatedQty = quantities[productId] + 1;
+      updateQuantity(productId, updatedQty);
       dispatch(
         updateInstock({
-          id: selectedProd._id,
+          id: productId,
           instock: selectedProdInstock - 1,
         })
       );
     }
   };
 
-  const decreaseQtyHandler = () => {
-    const selectedProd = item.type.find((prod) => prod.size === selectedSize);
-    const selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
-    if (qty > 1 && selectedProdInstock < selectedProd.instock) {
-      setQty((prev) => prev - 1);
+  const decreaseQtyHandler = (productId) => {
+    const selectedProdInstock = instock[productId];
+    if (quantities[productId] > 1 || selectedProdInstock < item.instock) {
+      const updatedQty = quantities[productId] - 1;
+      updateQuantity(productId, updatedQty);
       dispatch(
         updateInstock({
-          id: selectedProd._id,
+          id: productId,
           instock: selectedProdInstock + 1,
         })
       );
     }
   };
 
-  const handleQtyChange = (e) => {
+  const handleQtyChange = (e, productId) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value >= 1) {
-      setQty(value);
+      updateQuantity(productId, value);
     } else {
-      setQty(1);
+      updateQuantity(productId, 1);
     }
   };
 
@@ -126,7 +139,11 @@ const ProductDetail = () => {
 
     console.log("clicked selected type....", selectedType);
 
-    const cartItem = { ...selectedType, qty, name: item.name };
+    const cartItem = {
+      ...selectedType,
+      qty: quantities[selectedType._id],
+      name: item.name,
+    };
 
     if (!existingCartItem) {
       dispatch(addToCart(cartItem));
@@ -221,19 +238,24 @@ const ProductDetail = () => {
         <div className="flex justify-center space-x-10">
           <div className="flex items-center justify-center space-x-4">
             <button
-              onClick={() => decreaseQtyHandler(item._id)}
+              onClick={() => decreaseQtyHandler(selectedProd._id)}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Remove className="hover:text-white" />
             </button>
             <input
               type="text"
-              value={qty}
-              onChange={handleQtyChange}
+              value={quantities[selectedProd._id]}
+              onChange={(e) =>
+                handleQtyChange(
+                  e,
+                  item.type.find((prod) => prod.size === selectedSize)._id
+                )
+              }
               className="border w-12 text-center border-slate-400 focus:outline-none focus:bg-slate-100"
             />
             <button
-              onClick={() => increaseQtyHandler(item._id)}
+              onClick={() => increaseQtyHandler(selectedProd._id)}
               className="bg-header px-2 py-2 rounded-lg hover:bg-hovcolor shadow-slate-600 shadow-md"
             >
               <Add className="hover:text-white" />
