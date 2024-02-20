@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Add, IronTwoTone, Remove } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import Star from "../Components/Star/Star";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../Redux/features/addToCartSlide";

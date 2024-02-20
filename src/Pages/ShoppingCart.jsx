@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
@@ -6,50 +6,75 @@ import { useDispatch } from "react-redux";
 // import { addToCart } from "../Redux/features/addToCartSlide";
 // import { updateInstock } from "../Redux/features/instockSlice";
 import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import DeliveryInfo from "../History/DeliveryInfo";
+import Footer from "../Components/Footer"
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 const ShoppingCart = () => {
   const cart = useSelector((state) => state?.cart?.cartArr);
-  console.log("cart Item...", cart);
+  const user = useSelector((state) => state.user?.userArr)
+  
 
-
-
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
   const instock = useSelector((state) => state.instock?.instock);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const allTotal = cart.reduce((total, item) => {
     const itemTotal = item.price * item.qty;
     return total + itemTotal;
   }, 0);
+ 
+  const formRef = useRef(null);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: 'smooth', block: "start", inline: "nearest" });
+      }
+    }, 1000); 
+  
+    return () => clearTimeout(timeout); 
+  }, []);
+  
 
-  // const increaseQtyHandler = (itemId) => {
-  //   const updatedCart = cart.map((item) =>
-  //     item._id === itemId && instock[item._id] > 0
-  //       ? { ...item, qty: item.qty + 1 }
-  //       : item
-  //   );
-  //   dispatch(addToCart(updatedCart));
-  //   dispatch(updateInstock({ id: itemId, instock: instock[itemId] - 1 }));
-  // };
+  //! payment integration
 
-  // const decreaseQtyHandler = (itemId) => {
-  //   const updatedCart = cart.map((item) =>
-  //     item._id === itemId && item.qty > 1
-  //       ? { ...item, qty: item.qty - 1 }
-  //       : item
-  //   );
-  //   dispatch(addToCart(updatedCart));
-  //   dispatch(updateInstock({ id: itemId, instock: instock[itemId] + 1 }));
-  // };
+  const handleBuyNow = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51OkzgqImpQsfXZBiF0eWVW4ukWHIFGms07voQguixso5kD9Eak5ka5MPQ3W303092gnWYjE95m7LW481QRFCOmsn00AtXb1NjH"
+    );
+    const body = { product: cart, allTotalPrice: allTotal };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const response = await fetch("http://localhost:4000/api/checkout", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
 
-  // const handleQtyChange = (e, itemId) => {
-  //   const value = parseInt(e.target.value);
-  // };
+    const session = await response.json();
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
 
-  const handleBuyNow = () => {
-    navigate("/delivery-info")
+    if ((await result).error) {
+      console.log((await result).error);
+    }
+  };
 
-  }
+  // const mutation = useMutation({
+  //   mutationFn : () => {
+  //     return axios.post(`http://localhost:4000/api/v1/order-list`, {
+  //       userId : 
+  //       items : {},
+  //       totalPrice : allTotal,
+  //       address : address,
+  //       city : city,
+  //     })
+  //   }
+  // })
+
 
   //! columns
 
@@ -170,7 +195,8 @@ const ShoppingCart = () => {
   }));
 
   return (
-    <div className="container mx-12 mt-12">
+    <>
+    <div className="container mx-12 mt-12 h-[150vh]" >
       <div className="text-center mt-12">
         <h1 className="relative flex justify-center items-center text-3xl font-bold">
           Shopping Cart
@@ -178,7 +204,7 @@ const ShoppingCart = () => {
         </h1>
       </div>
       {cart?.length > 0 ? (
-        <div className="flex justify-between items-center mt-10">
+        <div className="flex flex-col justify-between items-center mt-10">
           <div
             style={{ height: 400, width: "70%", backgroundColor: ["#eaf4f4"] }}
           >
@@ -191,27 +217,39 @@ const ShoppingCart = () => {
             />
           </div>
 
-          <div className="flex-1 ml-5">
-            <div className="bg-slate-600 p-6 text-white">
-              <div className="text-xl font-bold mb-4">Order Summary</div>
-              <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span>$subtotal</span>
+          <div ref={formRef}  className="flex items-center justify-center w-full">
+            <div className="w-1/2">
+              <DeliveryInfo
+              onFormCompletionChange={setIsFormCompleted}
+              allTotal = {allTotal} 
+              />
+            </div>
+
+            <div className="w-80">
+              <div className="bg-slate-600 p-6 text-white">
+                <div className="text-xl font-bold mb-4">Order Summary</div>
+                <div className="flex justify-between">
+                  <span>Subtotal:</span>
+                  <span>$subtotal</span>
+                </div>
+                <div className="flex justify-between mt-2">
+                  <span>Shipping:</span>
+                  <span>free shipping</span>
+                </div>
+                <div className="flex justify-between mt-2">
+                  <span>All Total:</span>
+                  <span>$ {allTotal.toFixed(2)}</span>
+                </div>
+                <button
+                  onClick={() => handleBuyNow()}
+                  disabled={!isFormCompleted} // Disable button if form is not completed
+                  className={`mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full ${
+                    !isFormCompleted ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <text className="font-semibold">Buy Now</text>
+                </button>
               </div>
-              <div className="flex justify-between mt-2">
-                <span>Shipping:</span>
-                <span>free shipping</span>
-              </div>
-              <div className="flex justify-between mt-2">
-                <span>All Total:</span>
-                <span>$ {allTotal.toFixed(2)}</span>
-              </div>
-              <button
-              onClick={() => handleBuyNow()}
-              
-              className="mt-4 bg-white hover:bg-hovcolor hover:text-white text-comTxt py-2 px-4 rounded-full">
-                <text className="font-semibold">Buy Now</text>
-              </button>
             </div>
           </div>
         </div>
@@ -232,6 +270,8 @@ const ShoppingCart = () => {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 

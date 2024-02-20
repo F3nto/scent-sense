@@ -13,6 +13,8 @@ import SignUp from "../Auth/SignUp";
 import MyAccount from "../Auth/MyAccount";
 import OrderHistory from "../History/OrderHistory";
 import DeliveryInfo from "../History/DeliveryInfo";
+import Success from "../successAndCancel/Success";
+import Cancel from "../successAndCancel/Cancel";
 
 
 const MainNavigator = () => {
@@ -30,6 +32,8 @@ const MainNavigator = () => {
         <Route path="/order-history" Component={OrderHistory}/>
         <Route path="/shopping-cart" Component={ShoppingCart} />
         <Route path="/delivery-info" Component={DeliveryInfo}/>
+        <Route path="/success" Component={Success}/>
+        <Route path="/cancel" Component={Cancel} />
       </Routes>
     </BrowserRouter>
   );

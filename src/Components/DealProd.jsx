@@ -106,7 +106,7 @@ const DealProd = ({isSearchFocused}) => {
 
       <div className="flex items-center space-x-6 mt-12">
         {currentPosts.map((item, index) => (
-          <div
+          <div 
             key={index}
             className="flex flex-col border border-slate-300 rounded-tr-md rounded-tl-md"
           >
