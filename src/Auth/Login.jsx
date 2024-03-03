@@ -59,13 +59,13 @@ const Login = ({ onCloseAllModal, onSignUpClick }) => {
     onSuccess: (data) => {
       if (data && data.data && data.data.success) {
         const userData = data.data.user;
-        console.log(userData);
+        localStorage.setItem("token", data.data.token);
         dispatch(addToUser(userData));
         setTimeout(() => {
           onCloseAllModal();
         }, 1300);
-        toast.success("Login Successfully")
-      }
+        return toast.success("Login Successfully")
+      } 
     },
 
     onError: (error) => {
@@ -74,8 +74,13 @@ const Login = ({ onCloseAllModal, onSignUpClick }) => {
           setIsLoading(false);
           toast.error("Something went wrong!!!");
         }, 1800);
+      } else if(error.response && error.response.status === 404){
+        setTimeout(() => {
+          setIsLoading(false);
+          toast.error("User Not found!!!");
+        }, 1800);
       } else {
-        console.error("Error:", error);
+        console.error(error)
       }
     },
 

@@ -6,7 +6,7 @@ import {
   ShoppingCart,
 } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
-import { getBestSellerProd } from "../../Api/BestSellerApi";
+import axios from "axios";
 //! redux
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +14,8 @@ import {
   removeWishList,
 } from "../../Redux/features/wishListSlide";
 import { addToCart, removeFromCart } from "../../Redux/features/addToCartSlide";
+import {getOrderList} from "../../Api/AllOrderListApi";
+import { getAllProd } from "../../Api/AllProdApi";
 
 const BestSeller = () => {
   const dispatch = useDispatch();
@@ -49,6 +51,7 @@ const BestSeller = () => {
 
   const [bestProdHeight, setBestProdHeight] = useState(getInitialHeight());
   const [bestProdWidth, setBestProdWidth] = useState(getInitialWidth());
+  const [bestSellerProducts, setBestSellerProducts] = useState([]);
 
   const navigate = useNavigate();
   const handleClickView = (item) => {
@@ -79,18 +82,57 @@ const BestSeller = () => {
     }
   };
 
-  const { error, isPending, data } = useQuery({
-    queryKey: ["best-seller"],
-    queryFn: getBestSellerProd,
+  const {
+    error: orderError,
+    isPending: orderPending,
+    data: orderData,
+  } = useQuery({
+    queryKey: ["all-order-lists"],
+    queryFn: getOrderList,
   });
 
-  if (isPending) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
+  const {
+    error: bestProdErr,
+    isPending: bestProdPending,
+    data: allProductsData,
+  } = useQuery({
+    queryKey: ["all-products"],
+    queryFn: getAllProd,
+  
+  });
+
+  useEffect(() => {
+    if (!orderPending && !orderError && !bestProdPending && !bestProdErr) {
+      const productsMap = {};
+      orderData.forEach((order) => {
+        order.items.forEach((item) => {
+          if (productsMap[item.productId]) {
+            productsMap[item.productId] += item.quantity;
+          } else {
+            productsMap[item.productId] = item.quantity;
+          }
+        });
+      });
+
+      const bestSellerIds = Object.keys(productsMap).filter(
+        (productId) => productsMap[productId] > 30
+      );
+
+      const bestSellerProductsData = allProductsData.filter(product => {
+        return product.type.some(type => bestSellerIds.includes(type._id));
+      });
+      setBestSellerProducts(bestSellerProductsData);
+      console.log("Best Seller Products:", bestSellerProducts);
+    }
+  }, [orderData, allProductsData, orderPending, orderError, bestProdPending, bestProdErr]);
+
+  if (orderPending || bestProdPending) return "Loading...";
+  if (orderError || bestProdErr) return "An error has occurred";
 
   return (
     <div className="mt-12">
       <div className="flex flex-wrap justify-between items-center">
-        {data.map((item, index) => (
+        {bestSellerProducts.map((item, index) => (
           <div
             key={index}
             className="border border-slate-400 rounded-tr-md rounded-tl-md my-2"

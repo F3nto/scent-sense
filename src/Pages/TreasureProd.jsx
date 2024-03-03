@@ -28,7 +28,7 @@ const TreasureProd = () => {
   const { error, isPending, data } = useQuery({
     queryKey: ["Treasure-products"],
     queryFn: getTreasureProd,
-  });
+  }); 
 
   if (isPending) return "Loading...";
   if (error) return "An error has occured: " + error.message;

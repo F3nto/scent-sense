@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SignUp from "./SignUp";
 import Login from "./Login";
 import { Close } from "@mui/icons-material";
-import OtpVerification from "./OtpVerification";
 
 const SignUpAndLogin = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Login");

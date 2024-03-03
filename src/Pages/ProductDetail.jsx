@@ -17,14 +17,12 @@ const ProductDetail = () => {
 
   const cart = useSelector((state) => state.cart?.cartArr);
   const instock = useSelector((state) => state.instock?.instock);
-  console.log("instock left", instock);
 
   const [selectedSize, setSelectedSize] = useState(item.type[0].size);
   const [expanded, setExpanded] = useState(false);
 
   const selectedProd = item.type.find((prod) => prod.size === selectedSize);
   let selectedProdInstock = selectedProd ? instock[selectedProd._id] : 0;
-  console.log("Selected product instock:", selectedProdInstock);
 
   const truncateTxt = (txt, maxlength) => {
     return expanded
@@ -140,9 +138,12 @@ const ProductDetail = () => {
     console.log("clicked selected type....", selectedType);
 
     const cartItem = {
+     
       ...selectedType,
       qty: quantities[selectedType._id],
       name: item.name,
+      prodId : item._id,
+    
     };
 
     if (!existingCartItem) {

@@ -63,19 +63,6 @@ const ShoppingCart = () => {
     }
   };
 
-  // const mutation = useMutation({
-  //   mutationFn : () => {
-  //     return axios.post(`http://localhost:4000/api/v1/order-list`, {
-  //       userId : 
-  //       items : {},
-  //       totalPrice : allTotal,
-  //       address : address,
-  //       city : city,
-  //     })
-  //   }
-  // })
-
-
   //! columns
 
   const columns = [
@@ -242,7 +229,7 @@ const ShoppingCart = () => {
                 </div>
                 <button
                   onClick={() => handleBuyNow()}
-                  disabled={!isFormCompleted} // Disable button if form is not completed
+                  disabled={!isFormCompleted} 
                   className={`mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full ${
                     !isFormCompleted ? "opacity-50 cursor-not-allowed" : ""
                   }`}

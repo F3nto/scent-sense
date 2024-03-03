@@ -63,6 +63,7 @@ const OtpVerification = ({ onCloseAllModal, onClose, formData }) => {
       if (data && data.data && data.data.success) {
         const userData = data.data.user;
         dispatch(addToUser(userData));
+        localStorage.setItem("token", data.data.token);
         setSuccess(true);
         setError("");
         toast.success("SignUp Successful");

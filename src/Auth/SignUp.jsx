@@ -68,7 +68,7 @@ const SignUp = ({ onCloseAllModal }) => {
       if (error.response && error.response.status === 409) {
         setTimeout(() => {
           setIsLoading(false);
-          toast.error("User already exists");
+          return toast.error("User already exists");
         }, 1800);
       } else {
         console.error("Error:", error);

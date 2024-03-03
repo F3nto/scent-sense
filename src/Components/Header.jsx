@@ -10,8 +10,6 @@ import { Clear } from "@mui/icons-material";
 import axios from "axios";
 import UserInfo from "../Auth/UserInfo";
 
-
-
 const Header = ({ onSearchFocus }) => {
   const [isClickMenu, setIsClickMenu] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -21,8 +19,8 @@ const Header = ({ onSearchFocus }) => {
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
 
   const wishListQty = useSelector((state) => state.wishList?.wishListArr);
-  const user = useSelector((state) => state.user?.userArr)
-  console.log("user data are....", user)
+  const user = useSelector((state) => state.user?.userArr);
+  console.log("user data are....", user);
   const cartQty = useSelector((state) => state.cart?.cartArr);
   const searchForAllProdData = useSelector(
     (state) => state.search.searchArrForAllProduct
@@ -204,7 +202,7 @@ const Header = ({ onSearchFocus }) => {
 
   const handleUserInfo = () => {
     setIsUserInfoOpen((prev) => !prev);
-  }
+  };
 
   return (
     <>
@@ -324,23 +322,20 @@ const Header = ({ onSearchFocus }) => {
             )}
           </button>
 
-          {user.length !== 0 ?
-
-          <button
-          onClick = {() => handleUserInfo()}
-          className="bg-hovcolor w-10 h-10 rounded-full flex justify-center items-center">
-            <text className="text-white text-xl font-fontbody">{user[0]?.name.charAt(0).toUpperCase()}</text>
-          </button>
-
-          :
-
-          <button onClick={() => openAuthModal()} className="text-slate-600">
-            <Person style={{ width: "40px", height: "40px" }} />
-          </button>
-
-          }
-
-
+          {user.length !== 0 ? (
+            <button
+              onClick={() => handleUserInfo()}
+              className="bg-hovcolor w-10 h-10 rounded-full flex justify-center items-center"
+            >
+              <text className="text-white text-xl font-fontbody">
+                {user[0]?.name.charAt(0).toUpperCase()}
+              </text>
+            </button>
+          ) : (
+            <button onClick={() => openAuthModal()} className="text-slate-600">
+              <Person style={{ width: "40px", height: "40px" }} />
+            </button>
+          )}
         </div>
         <div className="flex md:ml-32 sm:ml-20 md:sm:hidden">
           <div className="w-12 h-12 rounded-full bg-white hover:bg-header flex justify-center items-center shadow-lg hover:shadow-lg shadow-header">
@@ -392,8 +387,7 @@ const Header = ({ onSearchFocus }) => {
         <FavoriteModal onClose={() => setIsFavModalOpen(false)} />
       ) : null}
 
-      {isUserInfoOpen && <UserInfo  />}  
-
+      {isUserInfoOpen && <UserInfo closeUserInfo = {() => setIsUserInfoOpen(false)}  />}
     </>
   );
 };

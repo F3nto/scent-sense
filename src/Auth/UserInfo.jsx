@@ -4,9 +4,7 @@ import {Logout, Person, ArrowForwardIos, PlaylistAddCheckCircle} from "@mui/icon
 import {useNavigate} from "react-router-dom"
 import LogoutModal from "../Modal/LogoutModal";
 
-
-
-const UserInfo = () => {
+const UserInfo = ({closeUserInfo}) => {
   const user = useSelector((state) => state.user?.userArr);
   const [showModal, setShowModal] = useState(false)
 
@@ -83,7 +81,7 @@ const UserInfo = () => {
       </div>
       {
         showModal && 
-        <LogoutModal onClose={() => setShowModal(false)} />
+        <LogoutModal closeUserInfo = {closeUserInfo} onClose={() => setShowModal(false)} />
       }
       </>
   );
