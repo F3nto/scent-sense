@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Slider = ({isSearchFocused}) => {
+const Slider = ({ isSearchFocused }) => {
   let phts = [
     { img: require("../Assets/images/per1-3.jpg") },
     { img: require("../Assets/images/per1-4.jpg") },
@@ -42,18 +42,21 @@ const Slider = ({isSearchFocused}) => {
     };
   }, [phts.length]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleAllProd = () => {
-    navigate("/all-products")
-
-  }
+    navigate("/all-products");
+  };
 
   const handleTreasureProd = () => {
-    navigate("/treasure-products")
-  }
+    navigate("/treasure-products");
+  };
 
   return (
-    <div className={`mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex ${isSearchFocused && "-z-10 relative"}`}>
+    <div
+      className={`mx-2 md:sm:mx-12 mt-3 flex-none md:sm:flex ${
+        isSearchFocused && "-z-10 relative"
+      }`}
+    >
       <div className=" bg-slate-600 relative overflow-hidden w-full md:sm:w-2/3">
         <img
           src={phts[slideIndex].img}
@@ -75,7 +78,7 @@ const Slider = ({isSearchFocused}) => {
         <div className="absolute inset-0 top-2/4 left-12 flex-col">
           <div className="animation-custom">
             <text className="font-fontbody text-white font-semibold text-4xl">
-              Find Your Scent 
+              Find Your Scent
             </text>
           </div>
 
@@ -90,10 +93,10 @@ const Slider = ({isSearchFocused}) => {
       <div className="flex-1 flex-col ml-0 sm:md:ml-4 mt-3 sm:md:mt-0">
         <div className="bg-slate-400 relative overflow-hidden">
           <div className="transform scale-100 hover:scale-125 transition-all ease-in-out duration-700">
-            <img      
-              src={require("../Assets/images/pick-1-1.jpg")}  
-              className="object-cover opacity-70" 
-              style={{ width: "100%", height: "300px" }}  
+            <img
+              src={require("../Assets/images/pick-1-1.jpg")}
+              className="object-cover opacity-70"
+              style={{ width: "100%", height: "300px" }}
               alt=""
             />
           </div>
@@ -103,9 +106,10 @@ const Slider = ({isSearchFocused}) => {
                 Pick Your Items
               </text>
             </div>
-            <button 
-            onClick={() => handleAllProd()}
-            className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
+            <button
+              onClick={() => handleAllProd()}
+              className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group"
+            >
               <span className="underline underline-offset-4 hover:no-underline">
                 Explore Products
               </span>
@@ -130,8 +134,9 @@ const Slider = ({isSearchFocused}) => {
                 </text>
               </div>
               <button
-              onClick={() => handleTreasureProd()}
-               className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group">
+                onClick={() => handleTreasureProd()}
+                className="relative text-white hover:text-[#f7bba3] transition-all duration-300 ease-in font-fontbody font-semibold text-xl group"
+              >
                 <span className="underline underline-offset-4 hover:no-underline">
                   Explore Products
                 </span>

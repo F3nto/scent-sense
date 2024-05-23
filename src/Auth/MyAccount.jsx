@@ -53,13 +53,13 @@ const MyAccount = () => {
           <div className="w-full h-0.5 bg-slate-400 mt-4"></div>
           <text className="font-fontbody text-sm mt-4">
             <div className="flex justify-between items-center">
-            <div>
-            <span className="text-gray-500">Delete account</span>
-            <span className="ml-3">Delete current account</span>
-            </div>
-            <div className="mb-4">
+              <div>
+                <span className="text-gray-500">Delete account</span>
+                <span className="ml-3">Delete current account</span>
+              </div>
+              <div className="mb-4">
                 <text className="">Delete</text>
-            </div>
+              </div>
             </div>
           </text>
         </div>

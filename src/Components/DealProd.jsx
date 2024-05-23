@@ -13,7 +13,7 @@ import { addToCart, removeFromCart } from "../Redux/features/addToCartSlide";
 import { useQuery } from "@tanstack/react-query";
 import { getDealProd } from "../Api/DealApi";
 
-const DealProd = ({isSearchFocused}) => {
+const DealProd = ({ isSearchFocused }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
@@ -98,7 +98,11 @@ const DealProd = ({isSearchFocused}) => {
   };
 
   return (
-    <div className={`mt-12 mx-2 sm:md:mx-12 bg-[#ffffff] ${isSearchFocused && "-z-10 relative"}`}>
+    <div
+      className={`mt-12 mx-2 sm:md:mx-12 bg-[#ffffff] ${
+        isSearchFocused && "-z-10 relative"
+      }`}
+    >
       <h1 className="font-fontbody text-2xl font-semibold text-center relative flex justify-center items-center">
         Get Your Daily Dose of Luxury
         <div className="h-1 w-32 bg-header absolute top-9" />
@@ -106,7 +110,7 @@ const DealProd = ({isSearchFocused}) => {
 
       <div className="flex items-center space-x-6 mt-12">
         {currentPosts.map((item, index) => (
-          <div 
+          <div
             key={index}
             className="flex flex-col border border-slate-300 rounded-tr-md rounded-tl-md"
           >

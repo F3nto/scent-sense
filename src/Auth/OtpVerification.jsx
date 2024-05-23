@@ -19,8 +19,7 @@ const OtpVerification = ({ onCloseAllModal, onClose, formData }) => {
   const [disabled, setDisabled] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [retryAnimation, setRetryAnimation] = useState(false); // State to trigger the animation again
-
+  const [retryAnimation, setRetryAnimation] = useState(false);
   const dispatch = useDispatch();
 
   const handleVerificationCodeChange = (index, value) => {
@@ -73,11 +72,10 @@ const OtpVerification = ({ onCloseAllModal, onClose, formData }) => {
       }
     },
     onError: (error) => {
-      setError("Verification failed. Please enter a valid OTP");
+      setError("Verification failed. Please enter a valid OTP", error);
       setRetryAnimation(true);
     },
   });
-
   useEffect(() => {
     if (retryAnimation) {
       const timeout = setTimeout(() => {

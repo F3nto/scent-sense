@@ -387,7 +387,9 @@ const Header = ({ onSearchFocus }) => {
         <FavoriteModal onClose={() => setIsFavModalOpen(false)} />
       ) : null}
 
-      {isUserInfoOpen && <UserInfo closeUserInfo = {() => setIsUserInfoOpen(false)}  />}
+      {isUserInfoOpen && (
+        <UserInfo closeUserInfo={() => setIsUserInfoOpen(false)} />
+      )}
     </>
   );
 };

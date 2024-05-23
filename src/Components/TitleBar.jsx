@@ -31,9 +31,8 @@ const TitleBar = ({ onTitleClick, isSearchFocused }) => {
         onMouseLeave={() => handleMouseLeave()}
         className={`bg-[#eaf4f4] w-full h-16 items-center mt-4 hidden md:sm:flex relative
     ${isSearchFocused && "-z-10"}`}
-      >
+      > 
         <button
-        
           onMouseEnter={() => handleCategories()}
           className="ml-12 bg-slate-300 hover:bg-slate-400 hover:text-white py-5 px-5"
         >

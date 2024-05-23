@@ -17,7 +17,9 @@ const SignUpAndLogin = ({ onClose }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "Login":
-        return <Login onCloseAllModal = {onClose} onSignUpClick={handleSignUpClick} />;
+        return (
+          <Login onCloseAllModal={onClose} onSignUpClick={handleSignUpClick} />
+        );
 
       case "SignUp":
         return <SignUp onCloseAllModal={onClose} />;

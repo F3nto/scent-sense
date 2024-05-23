@@ -10,7 +10,7 @@ const BntrProd = ({isSearchFocused}) => {
     setActiveTab(tab);
   };
 
-  const renderContent = () => {
+  const renderContent = () => { 
     switch (activeTab) {
       case "bestSeller":
         return <BestSeller />;

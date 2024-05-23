@@ -2,10 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
-
-;
 
 body {
   overflow-x: hidden;
@@ -25,9 +22,7 @@ body {
   transition: transform 30s ease-out;
   animation: kenburns 30s infinite;
   will-change: transform;
-
 }
-
 
 @keyframes kenburns {
   0% {
@@ -44,12 +39,8 @@ body {
 }
 
 .animation-custom {
-
   animation: custom-fade 4s infinite;
-
 }
-
-
 
 @keyframes custom-fade {
   0% {
@@ -63,7 +54,6 @@ body {
   }
 }
 
-
 .transition-custom {
   transform: translateX(-20px);
   transition: transform 4s;
@@ -73,16 +63,9 @@ body {
   transform: translateX(0);
 }
 
-
-
-
 .animation-custom-allproduct {
-
   animation: custom-fade 4s infinite;
-
 }
-
-
 
 @keyframes custom-fade {
   0% {
@@ -96,7 +79,6 @@ body {
   }
 }
 
-
 .transition-custom {
   transform: translateX(-20px);
   transition: transform 4s;
@@ -105,9 +87,6 @@ body {
 .transition-custom:hover {
   transform: translateX(0);
 }
-
-
-
 
 @keyframes dot-appear {
   0% {
@@ -144,15 +123,10 @@ body {
   animation-delay: 1.5s;
 }
 
-
-
-
 .shake-load {
   animation: shake 1s;
   animation-iteration-count: 2;
 }
-
-
 
 @keyframes shake {
   0% {

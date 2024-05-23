@@ -5,7 +5,6 @@ import { Person, Email, Visibility, VisibilityOff } from "@mui/icons-material";
 import OtpVerification from "./OtpVerification";
 import { toast, Toaster } from "react-hot-toast";
 
-
 const SignUp = ({ onCloseAllModal }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -207,18 +206,6 @@ const SignUp = ({ onCloseAllModal }) => {
                 Terms of use and Privacy Policy
               </p>
             </div>
-            {/* <button 
-            onClick={handleGoogleSignUp}
-            className="px-4 py-2.5 bg-gradient-to-r from-header to-hovcolor hover:from-hovcolor hover:to-header group rounded-md w-full flex items-center justify-center">
-              <img
-                src={require("../Assets/icons/google.png")}
-                style={{ width: "26px", height: "26px" }}
-                alt=""
-              />
-              <text className="ml-2 text-comTxt group-hover:text-white">
-                Continuous with google
-              </text>
-            </button> */}
           </div>
 
           <div className="flex-1">

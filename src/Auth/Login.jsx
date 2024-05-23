@@ -5,7 +5,6 @@ import { toast, Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { addToUser } from "../Redux/features/UserSlice";
 import axios from "axios";
-
 const Login = ({ onCloseAllModal, onSignUpClick }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -64,8 +63,8 @@ const Login = ({ onCloseAllModal, onSignUpClick }) => {
         setTimeout(() => {
           onCloseAllModal();
         }, 1300);
-        return toast.success("Login Successfully")
-      } 
+        return toast.success("Login Successfully");
+      }
     },
 
     onError: (error) => {
@@ -74,16 +73,15 @@ const Login = ({ onCloseAllModal, onSignUpClick }) => {
           setIsLoading(false);
           toast.error("Something went wrong!!!");
         }, 1800);
-      } else if(error.response && error.response.status === 404){
+      } else if (error.response && error.response.status === 404) {
         setTimeout(() => {
           setIsLoading(false);
           toast.error("User Not found!!!");
         }, 1800);
       } else {
-        console.error(error)
+        console.error(error);
       }
     },
-
   });
 
   const handleSubmit = (e) => {
